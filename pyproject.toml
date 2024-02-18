@@ -16,6 +16,7 @@ Changelog = "https://github.com/DanBeranek/desssign/releases"
 [tool.poetry.dependencies]
 python = "^3.9"
 click = ">=8.0.1"
+numpy = "^1.26.4"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
@@ -107,7 +108,7 @@ force-single-line = true
 max-complexity = 15
 
 [tool.ruff.lint.pydocstyle]
-convention = "google"  # You can also use "numpy".
+convention = "numpy"  # You can also use "google".
 
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = ["classmethod", "validator", "root_validator", "pydantic.validator"]
