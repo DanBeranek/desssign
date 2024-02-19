@@ -17,6 +17,8 @@ Changelog = "https://github.com/DanBeranek/desssign/releases"
 python = "^3.9"
 click = ">=8.0.1"
 numpy = "^1.26.4"
+aenum = "^3.1.15"
+framesss = "^0.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
