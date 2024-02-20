@@ -47,11 +47,13 @@ class CombinationGroup:
                     other_variable_cases = variable_cases[:i] + variable_cases[i+1:]
 
                     self.combinations.extend(generate_combination(c, permanent_cases, leading_variable_case, other_variable_cases, self.combination_type))
+
+                    c += 1
             else:
                 self.combinations.extend(
                     generate_combination(c, permanent_cases, None, [],
                                          self.combination_type))
-            c += 1
+                c += 1
 
 
 if __name__ == "__main__":
@@ -77,8 +79,9 @@ if __name__ == "__main__":
     W4 = DesignLoadCase("W4", 'variable', 'wind')
     LG4 = LoadGroup([W1, W2, W3, W4], 'exclusive')
 
-    ULS = CombinationGroup('ULS', 'alternative')
+    ULS = CombinationGroup('ULS', 'basic')
 
-    ULS.generate_combinations(LG1, LG2, LG3, LG4)
+    ULS.generate_combinations(LG1, LG3, LG4)
+    ULS.generate_combinations(LG1, LG2)
 
     print('')
