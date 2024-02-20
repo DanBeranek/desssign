@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class LoadGroup:
     def __init__(self,
                  load_cases: list[DesignLoadCase],
-                 load_case_relation: str | LoadCaseRelation = 'standard') -> None:
+                 load_case_relation: str | LoadCaseRelation = LoadCaseRelation.STANDARD) -> None:
         """
         Init the LoadGroup class.
 
