@@ -8,6 +8,7 @@ class LoadBehavior(CaseInsensitiveStrEnum):
 
 class LoadType(CaseInsensitiveStrEnum):
     """Enumeration of possible type of action."""
+
     PERMANENT = "permanent"
     VARIABLE = "variable"
     ACCIDENTAL = "accidental"
@@ -20,12 +21,14 @@ class LimitState(CaseInsensitiveStrEnum):
     :cvar ULS: Ultimate limit state.
     :cvar SLS: Serviceability limit state.
     """
+
     ULS = "uls"
     SLS = "sls"
 
 
 class UltimateLimitStates(CaseInsensitiveStrEnum):
     """Enumeration of ultimate limit states."""
+
     EQU = "equ"
     STR = "str"
     GEO = "geo"
@@ -45,6 +48,7 @@ class ULSCombination(CaseInsensitiveStrEnum):
                        variable load cases.
     :cvar ACCIDENTAL: Accidental combinations according to equations 6.11 of EN 1990.
     """
+
     BASIC = "basic"
     ALTERNATIVE = "alternative"
     ACCIDENTAL = "accidental"
@@ -58,6 +62,7 @@ class SLSCombination(CaseInsensitiveStrEnum):
     :cvar FREQUENT: Combination according to equation 6.15 of EN 1990.
     :cvar QUASIPERMANENT: Combination according to equation 6.16 of EN 1990.
     """
+
     CHARACTERISTIC = "characteristic"
     FREQUENT = "frequent"
     QUASIPERMANENT = "quasipermanent"
@@ -65,6 +70,7 @@ class SLSCombination(CaseInsensitiveStrEnum):
 
 class VariableCategory(CaseInsensitiveStrEnum):
     """Enumeration of possible variable loads."""
+
     CATEGORY_A = "category a"
     CATEGORY_B = "category b"
     CATEGORY_C = "category c"
@@ -87,6 +93,7 @@ class LoadCaseRelation(CaseInsensitiveStrEnum):
     :cvar STANDARD: Load cases from the same load group may (or may not) act together.
     :cvar TOGETHER: Load cases from the same load group always act together.
     """
+
     EXCLUSIVE = "exclusive"
     STANDARD = "standard"
     TOGETHER = "together"

@@ -41,7 +41,9 @@ class CombinationGroup:
         # get all possible combinations
         all_iterables = []
         for load_groups in args:
-            all_iterables.append([load_group.combinations for load_group in load_groups])
+            all_iterables.append(
+                [load_group.combinations for load_group in load_groups]
+            )
 
         combinations = []
         for iterables in all_iterables:

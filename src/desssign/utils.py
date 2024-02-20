@@ -1,11 +1,12 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from typing import Any
 
 
-def flatten_list(mixed_list: list[list | Any]) -> list[Any]:
+def flatten_list(mixed_list: tuple[Any] | list[Any]) -> list[Any]:
     """
     Flatten a list containing nested lists into a single list with all the elements.
 

@@ -1,5 +1,6 @@
-from desssign.loads.enums import VariableCategory, UltimateLimitStates, LoadType, LoadBehavior
-
+from desssign.loads.enums import LoadBehavior
+from desssign.loads.enums import LoadType
+from desssign.loads.enums import VariableCategory
 
 PSI_FACTORS = {
     VariableCategory.CATEGORY_A: {
@@ -67,16 +68,25 @@ PSI_FACTORS = {
 
 GAMMA_VALUES = {
     "Set B": {
-        "states": [UltimateLimitStates.STR, UltimateLimitStates.GEO],
         LoadType.PERMANENT: {
             LoadBehavior.FAVOURABLE: 1.0,
             LoadBehavior.UNFAVOURABLE: 1.35,
         },
         LoadType.VARIABLE: {
             LoadBehavior.FAVOURABLE: 0.0,
-            LoadBehavior.UNFAVOURABLE: 1.5
-        }
-    }
+            LoadBehavior.UNFAVOURABLE: 1.5,
+        },
+    },
+    "Set C": {
+        LoadType.PERMANENT: {
+            LoadBehavior.FAVOURABLE: 1.0,
+            LoadBehavior.UNFAVOURABLE: 1.0,
+        },
+        LoadType.VARIABLE: {
+            LoadBehavior.FAVOURABLE: 0.0,
+            LoadBehavior.UNFAVOURABLE: 1.3,
+        },
+    },
 }
 
 XI = 0.85
