@@ -30,6 +30,7 @@ class CombinationGroup:
         self.combinations: list[DesignLoadCombination] = []
 
     def generate_combinations(self, *args: LoadGroup) -> None:
+        # TODO: Duplicates permanent load cases when multiple generate combinations is called
         # get all possible combinations
         iterables = [load_group.combinations for load_group in args]
 
