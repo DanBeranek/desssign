@@ -2,11 +2,11 @@
 This module contains mechanical properties of wood according to ČSN EN 338:2016.
 
 E_m0mean: mean characteristic value of modulus of elasticity in bending parallel to grain (in kN/mm2)
-E_t,0,mean: mean characteristic value of modulus of elasticity in tension parallel to grain (in kN/mm2)
+E_t0,mean: mean characteristic value of modulus of elasticity in tension parallel to grain (in kN/mm2)
 E_m0k: 5-percentile characteristic value of modulus of elasticity in bending parallel to grain (in kN/mm2)
-E_t,0,k: 5-percentile characteristic value of modulus of elasticity in tension parallel to grain (in kN/mm2)
+E_t0k: 5-percentile characteristic value of modulus of elasticity in tension parallel to grain (in kN/mm2)
 E_m90mean: mean characteristic value of modulus of elasticity in bending perpendicular to grain (in kN/mm2)
-E_t,90,mean: mean characteristic value of modulus of elasticity in tension perpendicular to grain (in kN/mm2)
+E_t90mean: mean characteristic value of modulus of elasticity in tension perpendicular to grain (in kN/mm2)
 f_c0k: 5-percentile characteristic value of compressive strength parallel to grain (in N/mm2)
 f_c90k: 5-percentile characteristic value of compressive strength perpendicular to grain (in N/mm2)
 f_mk: 5-percentile characteristic value of bending strength (in N/mm2)
