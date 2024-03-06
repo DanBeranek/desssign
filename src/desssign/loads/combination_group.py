@@ -70,10 +70,10 @@ class CombinationGroup:
                 if case.load_type == LoadType.VARIABLE
             ]
 
-            if variable_cases:  # in case there is only permanent cases
+            if variable_cases:
                 for i, leading_variable_case in enumerate(variable_cases):
                     # loop through every possible combination of leading + other variable for this unique combination
-                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1 :]
+                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1:]
 
                     self.combinations.extend(
                         generate_combination(
@@ -86,7 +86,7 @@ class CombinationGroup:
                     )
 
                     c += 1
-            else:
+            else:  # in case there is only permanent cases
                 self.combinations.extend(
                     generate_combination(
                         c, permanent_cases, None, [], self.combination_type
@@ -121,5 +121,8 @@ if __name__ == "__main__":
     ULS = CombinationGroup("ULS", "basic")
 
     ULS.generate_combinations([LG1, LG2], [LG1, LG3, LG4])
+
+    for comb in ULS.combinations:
+        print(comb.combination_key)
 
     print("")
