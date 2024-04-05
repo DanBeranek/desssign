@@ -9,14 +9,21 @@ if TYPE_CHECKING:
     from desssign.loads.load_case import DesignLoadCase
 
 
-class LoadGroup:
+class LoadCaseGroup:
+    """
+    Class representing a group of load cases and relation between them.
+
+    :ivar load_cases: List of :class:`DesignLoad` instances.
+    :ivar load_case_relation: Relation between :class:`DesignLoad` instances.
+    """
+
     def __init__(
         self,
         load_cases: list[DesignLoadCase],
         load_case_relation: str | LoadCaseRelation = LoadCaseRelation.STANDARD,
     ) -> None:
         """
-        Init the LoadGroup class.
+        Init the LoadCaseGroup class.
 
         :param load_cases: List of :class:`DesignLoadCase` instances.
         :param load_case_relation: Relation between :class:`DesignLoadCase` instances.
@@ -26,9 +33,9 @@ class LoadGroup:
         self.load_case_relation = LoadCaseRelation(load_case_relation)
 
     def __repr__(self) -> str:
-        """Return a string representation of the LoadGroup object."""
+        """Return a string representation of the LoadCaseGroup object."""
         return (
-            f"LoadGroup("
+            f"LoadCaseGroup("
             f"load_cases={self.load_cases}, "
             f"load_case_relation={self.load_case_relation}"
             f")"

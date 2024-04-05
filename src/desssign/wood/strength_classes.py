@@ -1,5 +1,5 @@
 """
-This module contains mechanical properties of wood according to ČSN EN 338:2016.
+The module contains mechanical properties of wood according to ČSN EN 338:2016.
 
 E_m0mean: mean characteristic value of modulus of elasticity in bending parallel to grain (in kN/mm2)
 E_t0,mean: mean characteristic value of modulus of elasticity in tension parallel to grain (in kN/mm2)

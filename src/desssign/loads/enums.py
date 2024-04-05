@@ -2,6 +2,8 @@ from framesss.enums import CaseInsensitiveStrEnum
 
 
 class LoadBehavior(CaseInsensitiveStrEnum):
+    """Enumeration of possible behavior of action."""
+
     UNFAVOURABLE = "unfavourable"
     FAVOURABLE = "favourable"
 

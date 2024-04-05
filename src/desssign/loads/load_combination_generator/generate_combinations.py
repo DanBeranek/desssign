@@ -6,7 +6,7 @@ from desssign.loads.enums import LoadBehavior
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSCombination
 from desssign.loads.enums import VariableCategory
-from desssign.loads.load_combination import DesignLoadCombination
+from desssign.loads.load_combination import DesignLoadCaseCombination
 from desssign.loads.load_combination_generator.constants import GAMMA_VALUES
 from desssign.loads.load_combination_generator.constants import PSI_FACTORS
 from desssign.loads.load_combination_generator.constants import XI
@@ -21,7 +21,16 @@ def generate_combination(
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
     combination: SLSCombination | ULSCombination,
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate a combination of load cases according to the limit state and combination type.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    :param combination: The combination type.
+    """
     if combination == SLSCombination.CHARACTERISTIC:
         return generate_sls_characteristic_combination(
             i, permanent_cases, leading_variable_case, other_variable_cases
@@ -55,7 +64,18 @@ def generate_sls_characteristic_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate a characteristic combination of load cases for serviceability limit state.
+
+    Combination is generated according to equations 6.14 of EN 1990.
+    The combination is normally used for irreversible limit states.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    """
     cases = {}
     key = ""
 
@@ -72,7 +92,7 @@ def generate_sls_characteristic_combination(
         cases[case] = factor
         key += f"{factor}*{case.label}+"
 
-    return [DesignLoadCombination(f"SLS-Characteristic-{i}", cases, key[:-1])]
+    return [DesignLoadCaseCombination(f"SLS-Characteristic-{i}", cases, key[:-1])]
 
 
 def generate_sls_frequent_combination(
@@ -80,7 +100,18 @@ def generate_sls_frequent_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate a frequent combination of load cases for serviceability limit state.
+
+    Combination is generated according to equations 6.15 of EN 1990.
+    The combination is normally used for reversible limit states.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    """
     cases = {}
     key = ""
 
@@ -98,7 +129,7 @@ def generate_sls_frequent_combination(
         cases[case] = factor
         key += f"{factor}*{case.label}+"
 
-    return [DesignLoadCombination(f"SLS-Frequent-{i}", cases, key[:-1])]
+    return [DesignLoadCaseCombination(f"SLS-Frequent-{i}", cases, key[:-1])]
 
 
 def generate_sls_quasipermanent_combination(
@@ -106,7 +137,18 @@ def generate_sls_quasipermanent_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate a quasipermanent combination of load cases for serviceability limit state.
+
+    Combination is generated according to equations 6.16 of EN 1990.
+    The combination is normally used for long-term effects and the appearance of the structure.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    """
     cases = {}
     key = ""
 
@@ -124,7 +166,7 @@ def generate_sls_quasipermanent_combination(
         cases[case] = factor
         key += f"{factor}*{case.label}+"
 
-    return [DesignLoadCombination(f"SLS-Frequent-{i}", cases, key[:-1])]
+    return [DesignLoadCaseCombination(f"SLS-Frequent-{i}", cases, key[:-1])]
 
 
 def generate_uls_basic_combination(
@@ -132,7 +174,17 @@ def generate_uls_basic_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate a basic combination of load cases for ultimate limit state.
+
+    Combination is generated according to equations 6.10 of EN 1990.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    """
     cases = {}
     key = ""
 
@@ -158,7 +210,7 @@ def generate_uls_basic_combination(
         cases[case] = gamma * psi
         key += f"{gamma}*{psi}*{case.label}+"
 
-    return [DesignLoadCombination(f"ULS-Basic(6.10)-{i}", cases, key[:-1])]
+    return [DesignLoadCaseCombination(f"ULS-Basic(6.10)-{i}", cases, key[:-1])]
 
 
 def generate_uls_alternative_combinations(
@@ -166,7 +218,17 @@ def generate_uls_alternative_combinations(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> list[DesignLoadCombination]:
+) -> list[DesignLoadCaseCombination]:
+    """
+    Generate two alternative combinations of load cases for ultimate limit state.
+
+    Combinations are generated according to equations 6.10a and 6.10b of EN 1990.
+
+    :param i: The index of the combination.
+    :param permanent_cases: A list of permanent load cases.
+    :param leading_variable_case: The leading variable load case.
+    :param other_variable_cases: A list of other variable load cases.
+    """
     cases_a = {}
     key_a = ""
 
@@ -219,8 +281,8 @@ def generate_uls_alternative_combinations(
         key_b += f"{gamma}*{psi}*{case.label}+"
 
     combinations = [
-        DesignLoadCombination(f"ULS-Alternative(6.10a)-{i}", cases_a, key_a[:-1]),
-        DesignLoadCombination(f"ULS-Alternative(6.10b)-{i}", cases_b, key_b[:-1]),
+        DesignLoadCaseCombination(f"ULS-Alternative(6.10a)-{i}", cases_a, key_a[:-1]),
+        DesignLoadCaseCombination(f"ULS-Alternative(6.10b)-{i}", cases_b, key_b[:-1]),
     ]
 
     return combinations

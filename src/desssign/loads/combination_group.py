@@ -13,17 +13,35 @@ from desssign.loads.load_combination_generator.generate_combinations import (
 from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
-    from desssign.loads.load_combination import DesignLoadCombination
-    from desssign.loads.load_group import LoadGroup
+    from desssign.loads.load_case_group import LoadCaseGroup
+    from desssign.loads.load_combination import DesignLoadCaseCombination
 
 
-class CombinationGroup:
+class CombinationsGenerator:
+    """
+    A class used to generate all possible combinations of load cases for a specific limit state.
+
+    :ivar limit_state: The limit state of the combination group. Either ULS or SLS.
+    :ivar combination_type: The type of the combination group. For ULS: basic, alternative or accidental,
+                            for SLS: characteristic, frequent or quasi-permanent.
+    :ivar combinations: A list of all generated combinations of load cases.
+    """
+
     def __init__(
         self,
         limit_state: str | LimitState,
         combination_type: str | SLSCombination | ULSCombination,
     ) -> None:
-        """Init the CombinationGroup class."""
+        """
+        Initialize the CombinationsGenerator class.
+
+        :param limit_state: The limit state of the combination group. Either ULS or SLS.
+        :type limit_state: str | LimitState
+        :param combination_type: The type of the combination group. For ULS: basic, alternative or accidental,
+                                 for SLS: characteristic, frequent or quasi-permanent.
+        :type combination_type: str | SLSCombination | ULSCombination
+        :raises AttributeError: If the combination type does not match the limit state.
+        """
         self.limit_state = LimitState(limit_state)
 
         if self.limit_state == LimitState.ULS:
@@ -35,9 +53,15 @@ class CombinationGroup:
                 f"Can't set combination type: '{combination_type}' to limit state: '{limit_state}'."
             )
 
-        self.combinations: list[DesignLoadCombination] = []
+        self.combinations: list[DesignLoadCaseCombination] = []
 
-    def generate_combinations(self, *args: list[LoadGroup]) -> None:
+    def generate_combinations(self, *args: list[LoadCaseGroup]) -> None:
+        """
+        Generate all possible combinations of load cases.
+
+        :param args: Variable length argument list of LoadCaseGroup lists.
+        :type args: list[LoadCaseGroup]
+        """
         # get all possible combinations
         all_iterables = []
         for load_groups in args:
@@ -73,7 +97,7 @@ class CombinationGroup:
             if variable_cases:
                 for i, leading_variable_case in enumerate(variable_cases):
                     # loop through every possible combination of leading + other variable for this unique combination
-                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1:]
+                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1 :]
 
                     self.combinations.extend(
                         generate_combination(
@@ -97,28 +121,28 @@ class CombinationGroup:
 
 if __name__ == "__main__":
     from desssign.loads.load_case import DesignLoadCase
-    from desssign.loads.load_group import LoadGroup
+    from desssign.loads.load_case_group import LoadCaseGroup
 
     G1 = DesignLoadCase("G1", "permanent")
     G2 = DesignLoadCase("G2", "permanent")
-    LG1 = LoadGroup([G1, G2], "together")
+    LG1 = LoadCaseGroup([G1, G2], "together")
 
     Q1 = DesignLoadCase("Q1", "variable", "category a")
     Q2 = DesignLoadCase("Q2", "variable", "category b")
-    LG2 = LoadGroup([Q1, Q2], "standard")
+    LG2 = LoadCaseGroup([Q1, Q2], "standard")
 
     S1 = DesignLoadCase("S1", "variable", "snow < 1000 m")
     S2 = DesignLoadCase("S2", "variable", "snow < 1000 m")
     S3 = DesignLoadCase("S3", "variable", "snow < 1000 m")
-    LG3 = LoadGroup([S1, S2, S3], "exclusive")
+    LG3 = LoadCaseGroup([S1, S2, S3], "exclusive")
 
     W1 = DesignLoadCase("W1", "variable", "wind")
     W2 = DesignLoadCase("W2", "variable", "wind")
     W3 = DesignLoadCase("W3", "variable", "wind")
     W4 = DesignLoadCase("W4", "variable", "wind")
-    LG4 = LoadGroup([W1, W2, W3, W4], "exclusive")
+    LG4 = LoadCaseGroup([W1, W2, W3, W4], "exclusive")
 
-    ULS = CombinationGroup("ULS", "basic")
+    ULS = CombinationsGenerator("ULS", "basic")
 
     ULS.generate_combinations([LG1, LG2], [LG1, LG3, LG4])
 
