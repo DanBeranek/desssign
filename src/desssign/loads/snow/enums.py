@@ -2,7 +2,7 @@ from framesss.enums import CaseInsensitiveStrEnum
 
 
 class Topography(CaseInsensitiveStrEnum):
-    """Enumeration of topographies."""
+    """Enumeration of topographies according to EN 1991-1-13."""
 
     WINDSWEPT = "windswept"
     NORMAL = "normal"
@@ -10,7 +10,7 @@ class Topography(CaseInsensitiveStrEnum):
 
 
 class SnowZone(CaseInsensitiveStrEnum):
-    """Enumeration of snow zones."""
+    """Enumeration of snow zones according to ČSN EN 1991-1-3."""
 
     I = "I"
     II = "II"
