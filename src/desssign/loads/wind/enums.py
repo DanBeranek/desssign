@@ -36,5 +36,3 @@ class FlatRoofType(CaseInsensitiveStrEnum):
     WITH_PARAPETS = "with parapets"
     # CURVED_EAVES = "curved eaves"
     # MANSARD_EAVES = "mansard eaves"
-
-

@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from math import log
 
-from desssign.loads.wind.enums import WindZone
-from desssign.loads.wind.enums import TerrainCategory
-
-from desssign.loads.wind.constants import FUNDAMENTAL_VALUE_OF_BASIC_WIND_VELOCITY
-from desssign.loads.wind.constants import ROUGHNESS_LENGTH
-from desssign.loads.wind.constants import MINIMUM_HEIGHT
-from desssign.loads.wind.constants import DIRECTIONAL_FACTOR
-from desssign.loads.wind.constants import SEASONAL_FACTOR
 from desssign.loads.wind.constants import AIR_DENSITY
+from desssign.loads.wind.constants import DIRECTIONAL_FACTOR
+from desssign.loads.wind.constants import FUNDAMENTAL_VALUE_OF_BASIC_WIND_VELOCITY
+from desssign.loads.wind.constants import MINIMUM_HEIGHT
+from desssign.loads.wind.constants import ROUGHNESS_LENGTH
+from desssign.loads.wind.constants import SEASONAL_FACTOR
+from desssign.loads.wind.enums import TerrainCategory
+from desssign.loads.wind.enums import WindZone
 
 
 class WindLoad:
@@ -20,15 +19,17 @@ class WindLoad:
     :ivar c_season: Seasonal factor.
     :ivar rho_air: Density of air in kg/m³.
     """
-    def __init__(self,
-                 zone: str | WindZone,
-                 terrain_category: str | TerrainCategory,
-                 z_e: float,
-                 area: float = 10.0,
-                 c_dir: float = DIRECTIONAL_FACTOR,
-                 c_season: float = SEASONAL_FACTOR,
-                 rho_air: float = AIR_DENSITY
-                 ):
+
+    def __init__(
+        self,
+        zone: str | WindZone,
+        terrain_category: str | TerrainCategory,
+        z_e: float,
+        area: float = 10.0,
+        c_dir: float = DIRECTIONAL_FACTOR,
+        c_season: float = SEASONAL_FACTOR,
+        rho_air: float = AIR_DENSITY,
+    ):
         self.zone = zone
         self.terrain_category = terrain_category
         self.z_e = z_e
@@ -66,7 +67,7 @@ class WindLoad:
 
         :return: Basic velocity pressure in N/m².
         """
-        return 0.5 * self.rho_air * self.v_b ** 2
+        return 0.5 * self.rho_air * self.v_b**2
 
     @property
     def z_0(self) -> float:
@@ -159,7 +160,7 @@ class WindLoad:
         """
         Peak velocity pressure in N/m² according to EN 1991-1-4, 4.5.1(1), eq. (4.8).
         """
-        return (1 + 7 * self.I_v) * 1/2 * self.rho_air * self.v_m ** 2
+        return (1 + 7 * self.I_v) * 1 / 2 * self.rho_air * self.v_m**2
 
     @property
     def c_e(self) -> float:

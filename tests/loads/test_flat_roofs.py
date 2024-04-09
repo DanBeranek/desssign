@@ -1,9 +1,9 @@
 from numpy.testing import assert_almost_equal
 
-from desssign.loads.wind.roofs import FlatRoof
-from desssign.loads.wind.enums import WindZone
-from desssign.loads.wind.enums import TerrainCategory
 from desssign.loads.wind.enums import FlatRoofType
+from desssign.loads.wind.enums import TerrainCategory
+from desssign.loads.wind.enums import WindZone
+from desssign.loads.wind.roofs import FlatRoof
 
 
 def test_flat_roof_with_sharp_eaves_low_building() -> None:
@@ -40,17 +40,19 @@ def test_flat_roof_with_sharp_eaves_low_building() -> None:
         flat_roof.zones_wind_x_pressure or [],
         flat_roof.zones_wind_x_suction or [],
         flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or []
+        flat_roof.zones_wind_y_suction or [],
     ]
 
     expected_geometry = [
         expected_geometry_x,
         expected_geometry_x,
         expected_geometry_y,
-        expected_geometry_y
+        expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):
@@ -102,17 +104,19 @@ def test_flat_roof_with_sharp_eaves_high_building() -> None:
         flat_roof.zones_wind_x_pressure or [],
         flat_roof.zones_wind_x_suction or [],
         flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or []
+        flat_roof.zones_wind_y_suction or [],
     ]
 
     expected_geometry = [
         expected_geometry_x,
         expected_geometry_x,
         expected_geometry_y,
-        expected_geometry_y
+        expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):
@@ -139,7 +143,7 @@ def test_flat_roof_with_parapets_low_building() -> None:
         b_x=12.0,
         b_y=17.0,
         h=3.0,
-        h_p=0.5
+        h_p=0.5,
     )
 
     # TODO: Check the newest EN 1991-1-4 (z_e = h + h_p), e = min(b, 2h)
@@ -164,17 +168,19 @@ def test_flat_roof_with_parapets_low_building() -> None:
         flat_roof.zones_wind_x_pressure or [],
         flat_roof.zones_wind_x_suction or [],
         flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or []
+        flat_roof.zones_wind_y_suction or [],
     ]
 
     expected_geometry = [
         expected_geometry_x,
         expected_geometry_x,
         expected_geometry_y,
-        expected_geometry_y
+        expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):
@@ -201,7 +207,7 @@ def test_flat_roof_with_parapets_high_building() -> None:
         b_x=10.0,
         b_y=5.0,
         h=14.0,
-        h_p=0.5
+        h_p=0.5,
     )
 
     expected_geometry_x = [
@@ -224,17 +230,19 @@ def test_flat_roof_with_parapets_high_building() -> None:
         flat_roof.zones_wind_x_pressure or [],
         flat_roof.zones_wind_x_suction or [],
         flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or []
+        flat_roof.zones_wind_y_suction or [],
     ]
 
     expected_geometry = [
         expected_geometry_x,
         expected_geometry_x,
         expected_geometry_y,
-        expected_geometry_y
+        expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):

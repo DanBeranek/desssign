@@ -1,8 +1,8 @@
 from numpy.testing import assert_almost_equal
 
-from desssign.loads.wind.roofs import DuopitchRoof
-from desssign.loads.wind.enums import WindZone
 from desssign.loads.wind.enums import TerrainCategory
+from desssign.loads.wind.enums import WindZone
+from desssign.loads.wind.roofs import DuopitchRoof
 
 
 def test_duopitch_roof_10_degrees() -> None:
@@ -12,7 +12,7 @@ def test_duopitch_roof_10_degrees() -> None:
         b_x=8.0,
         b_y=12.0,
         h=7.0,
-        pitch_angle=10.0
+        pitch_angle=10.0,
     )
 
     # === ZONES GEOMETRY ===
@@ -41,7 +41,7 @@ def test_duopitch_roof_10_degrees() -> None:
         roof.zones_wind_x_neg_pos or [],
         roof.zones_wind_x_pos_neg or [],
         roof.zones_wind_x_pos_pos or [],
-        roof.zones_wind_y or []
+        roof.zones_wind_y or [],
     ]
 
     expected_geometry = [
@@ -52,7 +52,9 @@ def test_duopitch_roof_10_degrees() -> None:
         expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):
@@ -64,7 +66,7 @@ def test_duopitch_roof_10_degrees() -> None:
         [-1.88, -1.44, -1.88, -0.65, +0.15, +0.00],  # x: - / +
         [+0.14, +0.14, +0.14, +0.14, -1.15, -0.72],  # x: + / -
         [+0.14, +0.14, +0.14, +0.14, +0.15, +0.00],  # x: + / +
-        [-2.09, -1.87, -1.87, -2.09, -0.94, -0.94, -0.79, -0.79]  # y: - / -
+        [-2.09, -1.87, -1.87, -2.09, -0.94, -0.94, -0.79, -0.79],  # y: - / -
     ]
 
     for zones, expected_values in zip(zones_list, expected_pressure):  # type: ignore[assignment]
@@ -79,7 +81,7 @@ def test_duopitch_roof_43_degrees() -> None:
         b_x=10.0,
         b_y=10.0,
         h=13.5,
-        pitch_angle=43.0
+        pitch_angle=43.0,
     )
 
     # === ZONES GEOMETRY ===
@@ -108,7 +110,7 @@ def test_duopitch_roof_43_degrees() -> None:
         roof.zones_wind_x_neg_pos or [],
         roof.zones_wind_x_pos_neg or [],
         roof.zones_wind_x_pos_pos or [],
-        roof.zones_wind_y or []
+        roof.zones_wind_y or [],
     ]
 
     expected_geometry = [
@@ -119,7 +121,9 @@ def test_duopitch_roof_43_degrees() -> None:
         expected_geometry_y,
     ]
 
-    assert all(zones is not None for zones in zones_list)  # Zone lists should not contain None values.
+    assert all(
+        zones is not None for zones in zones_list
+    )  # Zone lists should not contain None values.
 
     for zones, expected_values in zip(zones_list, expected_geometry):
         for zone, expected_geo in zip(zones, expected_values):
@@ -131,7 +135,7 @@ def test_duopitch_roof_43_degrees() -> None:
         [-0.04, -0.04, -0.04, -0.02, +0.00, +0.00],  # x: - / +
         [+0.42, +0.42, +0.42, +0.35, -0.20, -0.14],  # x: + / -
         [+0.42, +0.42, +0.42, +0.35, +0.00, +0.00],  # x: + / +
-        [-0.66, -0.85, -0.85, -0.66, -0.54, -0.54, -0.30, -0.30]  # y: - / -
+        [-0.66, -0.85, -0.85, -0.66, -0.54, -0.54, -0.30, -0.30],  # y: - / -
     ]
 
     for zones, expected_values in zip(zones_list, expected_pressure):  # type: ignore[assignment]

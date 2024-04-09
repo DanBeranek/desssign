@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 from desssign.loads.wind.enums import FlatRoofType
 
 # mypy: ignore-errors
@@ -13,7 +12,7 @@ FLAT_ROOF_SHARP_EAVES = {
     "I": {
         "+": {"c_pe10": +0.2, "c_pe1": +0.2},
         "-": {"c_pe10": -0.2, "c_pe1": -0.2},
-    }
+    },
 }
 
 FLAT_ROOF_PARAPETS = {
@@ -24,7 +23,7 @@ FLAT_ROOF_PARAPETS = {
         "I": {
             "+": {"c_pe10": +0.2, "c_pe1": +0.2},
             "-": {"c_pe10": -0.2, "c_pe1": -0.2},
-        }
+        },
     },
     0.050: {
         "F": {"c_pe10": -1.4, "c_pe1": -2.0},
@@ -33,7 +32,7 @@ FLAT_ROOF_PARAPETS = {
         "I": {
             "+": {"c_pe10": +0.2, "c_pe1": +0.2},
             "-": {"c_pe10": -0.2, "c_pe1": -0.2},
-        }
+        },
     },
     0.100: {
         "F": {"c_pe10": -1.2, "c_pe1": -1.8},
@@ -42,8 +41,8 @@ FLAT_ROOF_PARAPETS = {
         "I": {
             "+": {"c_pe10": +0.2, "c_pe1": +0.2},
             "-": {"c_pe10": -0.2, "c_pe1": -0.2},
-        }
-    }
+        },
+    },
 }
 
 
@@ -66,7 +65,7 @@ def get_flat_roof_coefficient(
     zone_key: str,
     coefficient_label: str,
     sign: str | None = None,
-    ratio: float | None = None
+    ratio: float | None = None,
 ) -> float:
     if flat_roof_type == FlatRoofType.SHARP_EAVES:
         coefficients_data = FLAT_ROOF_SHARP_EAVES
@@ -81,14 +80,20 @@ def get_flat_roof_coefficient(
     elif flat_roof_type == FlatRoofType.WITH_PARAPETS:
         coefficients_data = FLAT_ROOF_PARAPETS
     else:
-        raise ValueError("The 'flat_roof_type' parameter must be either 'sharp_eaves' or 'with_parapets'.")
+        raise ValueError(
+            "The 'flat_roof_type' parameter must be either 'sharp_eaves' or 'with_parapets'."
+        )
 
     if ratio is not None:
         sorted_keys = sorted(coefficients_data.keys())
 
-        if ratio < sorted_keys[0]:  # Use the lowest boundary value if ratio is below the minimum
+        if (
+            ratio < sorted_keys[0]
+        ):  # Use the lowest boundary value if ratio is below the minimum
             ratio = sorted_keys[0]
-        elif ratio > sorted_keys[-1]:  # Use the highest boundary value if ratio is above the maximum
+        elif (
+            ratio > sorted_keys[-1]
+        ):  # Use the highest boundary value if ratio is above the maximum
             ratio = sorted_keys[-1]
 
         lower_key = None
@@ -111,70 +116,80 @@ def get_flat_roof_coefficient(
             lower_data = lower_data[sign]
             upper_data = upper_data[sign]
 
-        if lower_key == ratio or lower_key == upper_key:  # Exact match or only one key available
+        if (
+            lower_key == ratio or lower_key == upper_key
+        ):  # Exact match or only one key available
             return lower_data[coefficient_label]
 
         # Perform interpolation for the specific coefficient
-        return linear_interpolation(ratio, lower_key, upper_key, lower_data[coefficient_label], upper_data[coefficient_label])
+        return linear_interpolation(
+            ratio,
+            lower_key,
+            upper_key,
+            lower_data[coefficient_label],
+            upper_data[coefficient_label],
+        )
     else:
-        raise ValueError("The ratio parameter must be provided for flat roofs with parapets.")
+        raise ValueError(
+            "The ratio parameter must be provided for flat roofs with parapets."
+        )
 
 
 MONOPITCH_ROOF_COEFFICIENTS_0 = {
     5: {
         "F": {
             "-": {"c_pe10": -1.7, "c_pe1": -2.5},
-            "+": {"c_pe10": +0.0, "c_pe1": +0.0}
+            "+": {"c_pe10": +0.0, "c_pe1": +0.0},
         },
         "G": {
             "-": {"c_pe10": -1.2, "c_pe1": -2.0},
-            "+": {"c_pe10": +0.0, "c_pe1": +0.0}
+            "+": {"c_pe10": +0.0, "c_pe1": +0.0},
         },
         "H": {
             "-": {"c_pe10": -0.6, "c_pe1": -1.2},
-            "+": {"c_pe10": +0.0, "c_pe1": +0.0}
+            "+": {"c_pe10": +0.0, "c_pe1": +0.0},
         },
     },
     15: {
         "F": {
             "-": {"c_pe10": -0.9, "c_pe1": -2.0},
-            "+": {"c_pe10": +0.2, "c_pe1": +0.2}
+            "+": {"c_pe10": +0.2, "c_pe1": +0.2},
         },
         "G": {
             "-": {"c_pe10": -0.8, "c_pe1": -1.5},
-            "+": {"c_pe10": +0.2, "c_pe1": +0.2}
+            "+": {"c_pe10": +0.2, "c_pe1": +0.2},
         },
         "H": {
             "-": {"c_pe10": -0.3, "c_pe1": -0.3},
-            "+": {"c_pe10": +0.2, "c_pe1": +0.2}
+            "+": {"c_pe10": +0.2, "c_pe1": +0.2},
         },
     },
     30: {
         "F": {
             "-": {"c_pe10": -0.5, "c_pe1": -1.5},
-            "+": {"c_pe10": +0.7, "c_pe1": +0.7}
+            "+": {"c_pe10": +0.7, "c_pe1": +0.7},
         },
         "G": {
             "-": {"c_pe10": -0.5, "c_pe1": -1.5},
-            "+": {"c_pe10": +0.7, "c_pe1": +0.7}
+            "+": {"c_pe10": +0.7, "c_pe1": +0.7},
         },
         "H": {
             "-": {"c_pe10": -0.2, "c_pe1": -0.2},
-            "+": {"c_pe10": +0.4, "c_pe1": +0.4}
+            "+": {"c_pe10": +0.4, "c_pe1": +0.4},
         },
     },
     45: {
         "F": {
             "-": {"c_pe10": -0.0, "c_pe1": -0.0},
-            "+": {"c_pe10": +0.7, "c_pe1": +0.7}
+            "+": {"c_pe10": +0.7, "c_pe1": +0.7},
         },
         "G": {
             "-": {"c_pe10": -0.0, "c_pe1": -0.0},
-            "+": {"c_pe10": +0.7, "c_pe1": +0.7}
+            "+": {"c_pe10": +0.7, "c_pe1": +0.7},
         },
         "H": {
             "-": {"c_pe10": -0.0, "c_pe1": -0.0},
-            "+": {"c_pe10": +0.6, "c_pe1": +0.6}
+            "+": {"c_pe10": +0.6, "c_pe1": +0.6},
         },
     },
     60: {
@@ -219,7 +234,7 @@ MONOPITCH_ROOF_COEFFICIENTS_180 = {
         "F": {"c_pe10": -0.5, "c_pe1": -1.0},
         "G": {"c_pe10": -0.5, "c_pe1": -0.5},
         "H": {"c_pe10": -0.5, "c_pe1": -0.5},
-    }
+    },
 }
 
 MONOPITCH_ROOF_COEFFICIENTS_90 = {
@@ -264,7 +279,7 @@ MONOPITCH_ROOF_COEFFICIENTS_90 = {
         "G": {"c_pe10": -1.2, "c_pe1": -2.0},
         "H": {"c_pe10": -1.0, "c_pe1": -1.3},
         "I": {"c_pe10": -0.5, "c_pe1": -0.5},
-    }
+    },
 }
 
 DUOPITCH_ROOF_COEFFICIENTS_0 = {
@@ -330,7 +345,7 @@ DUOPITCH_ROOF_COEFFICIENTS_0 = {
         },
         "I": {
             "-": {"c_pe10": -0.6, "c_pe1": -0.6},
-            "+": {"c_pe10": +0.0, "c_pe1": +0.0}
+            "+": {"c_pe10": +0.0, "c_pe1": +0.0},
         },
         "J": {
             "-": {"c_pe10": -0.6, "c_pe1": -0.6},
@@ -488,19 +503,25 @@ def get_duopitch_roof_coefficient(
     coefficient_label: str,
     sign: str,
     pitch_angle: float,
-    wind_direction: str
+    wind_direction: str,
 ) -> float:
     if wind_direction == "x":
         coefficients_data = DUOPITCH_ROOF_COEFFICIENTS_0
     elif wind_direction == "y":
         coefficients_data = DUOPITCH_ROOF_COEFFICIENTS_90
     else:
-        raise ValueError(f"Direction must be either 'x' or 'y', not: '{wind_direction}'.")
+        raise ValueError(
+            f"Direction must be either 'x' or 'y', not: '{wind_direction}'."
+        )
 
     # Find nearest pitch angles for interpolation
     sorted_keys = sorted(coefficients_data.keys())
-    lower_key = max([k for k in sorted_keys if k <= pitch_angle], default=sorted_keys[0])
-    upper_key = min([k for k in sorted_keys if k >= pitch_angle], default=sorted_keys[-1])
+    lower_key = max(
+        [k for k in sorted_keys if k <= pitch_angle], default=sorted_keys[0]
+    )
+    upper_key = min(
+        [k for k in sorted_keys if k >= pitch_angle], default=sorted_keys[-1]
+    )
 
     # Get the data for lower and upper keys
     lower_data = coefficients_data[lower_key][zone_key]
@@ -518,5 +539,6 @@ def get_duopitch_roof_coefficient(
     if lower_key == upper_key:
         return lower_val  # Return directly if it's an exact match
     else:
-        return linear_interpolation(pitch_angle, lower_key, upper_key, lower_val, upper_val)
-
+        return linear_interpolation(
+            pitch_angle, lower_key, upper_key, lower_val, upper_val
+        )

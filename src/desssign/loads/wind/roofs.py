@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from desssign.loads.wind.external_pressure_coefficients import (
+    get_duopitch_roof_coefficient,
+)
 from desssign.loads.wind.external_pressure_coefficients import get_flat_roof_coefficient
-from desssign.loads.wind.external_pressure_coefficients import get_duopitch_roof_coefficient
 from desssign.loads.wind.wind_load import WindLoad
 
 if TYPE_CHECKING:
-    from desssign.loads.wind.enums import WindZone
-    from desssign.loads.wind.enums import TerrainCategory
     from desssign.loads.wind.enums import FlatRoofType
+    from desssign.loads.wind.enums import TerrainCategory
+    from desssign.loads.wind.enums import WindZone
 
 
 class Roof:
@@ -21,6 +23,7 @@ class Roof:
     :ivar b_x: Width of the building in the x-direction.
     :ivar b_y: Width of the building in the y-direction.
     """
+
     def __init__(
         self,
         zone: str | WindZone,
@@ -47,6 +50,7 @@ class FlatRoof(Roof):
     :ivar h_p: Height of the parapet.
     :ivar wind_load: Instance of the :class:`WindLoad` class.
     """
+
     def __init__(
         self,
         roof_type: str | FlatRoofType,
@@ -68,7 +72,9 @@ class FlatRoof(Roof):
         """Reference height."""
         return self.h + self.h_p
 
-    def calculate_zones(self, b: float, d: float, sign: str, direction: str) -> list[RoofZone]:
+    def calculate_zones(
+        self, b: float, d: float, sign: str, direction: str
+    ) -> list[RoofZone]:
         e = min(b, 2 * self.h)
         ratio = self.h_p / self.h if self.h_p != 0.0 else None
         c_pe = {}
@@ -79,31 +85,141 @@ class FlatRoof(Roof):
 
         if direction.lower() == "x":
             zones = [
-                RoofZone("F", 0.0, 0.0, e / 10, e / 4, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("G", 0.0, e / 4, e / 10, b - 2 * e / 4, c_pe["G"], c_pe["G"] * self.wind_load.q_p),
-                RoofZone("F", 0.0, b - e / 4, e / 10, e / 4, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
+                RoofZone(
+                    "F",
+                    0.0,
+                    0.0,
+                    e / 10,
+                    e / 4,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "G",
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    b - 2 * e / 4,
+                    c_pe["G"],
+                    c_pe["G"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "F",
+                    0.0,
+                    b - e / 4,
+                    e / 10,
+                    e / 4,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
             ]
             if d - e / 2 > 0:
-                zones.append(RoofZone("H", e / 10, 0.0, e / 2 - e / 10, b, c_pe["H"], c_pe["H"] * self.wind_load.q_p))
-                zones.append(RoofZone("I", e / 2, 0.0, d - e / 2, b, c_pe["I"], c_pe["I"] * self.wind_load.q_p))
+                zones.append(
+                    RoofZone(
+                        "H",
+                        e / 10,
+                        0.0,
+                        e / 2 - e / 10,
+                        b,
+                        c_pe["H"],
+                        c_pe["H"] * self.wind_load.q_p,
+                    )
+                )
+                zones.append(
+                    RoofZone(
+                        "I",
+                        e / 2,
+                        0.0,
+                        d - e / 2,
+                        b,
+                        c_pe["I"],
+                        c_pe["I"] * self.wind_load.q_p,
+                    )
+                )
             else:
-                zones.append(RoofZone("H", e / 10, 0.0, d - e / 10, b, c_pe["H"], c_pe["H"] * self.wind_load.q_p))
+                zones.append(
+                    RoofZone(
+                        "H",
+                        e / 10,
+                        0.0,
+                        d - e / 10,
+                        b,
+                        c_pe["H"],
+                        c_pe["H"] * self.wind_load.q_p,
+                    )
+                )
 
         elif direction.lower() == "y":
             zones = [
-                RoofZone("F", 0.0, 0.0, e / 4, e / 10, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("G", e / 4, 0.0, b - 2 * e / 4, e / 10, c_pe["G"], c_pe["G"] * self.wind_load.q_p),
-                RoofZone("F", b - e / 4, 0.0, e / 4, e / 10, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
+                RoofZone(
+                    "F",
+                    0.0,
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "G",
+                    e / 4,
+                    0.0,
+                    b - 2 * e / 4,
+                    e / 10,
+                    c_pe["G"],
+                    c_pe["G"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "F",
+                    b - e / 4,
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
             ]
 
             if d - e / 2 > 0:
-                zones.append(RoofZone("H", 0.0, e / 10, b, e / 2 - e / 10, c_pe["H"], c_pe["H"] * self.wind_load.q_p))
-                zones.append(RoofZone("I", 0.0, e / 2, b, d - e / 2, c_pe["I"], c_pe["I"] * self.wind_load.q_p))
+                zones.append(
+                    RoofZone(
+                        "H",
+                        0.0,
+                        e / 10,
+                        b,
+                        e / 2 - e / 10,
+                        c_pe["H"],
+                        c_pe["H"] * self.wind_load.q_p,
+                    )
+                )
+                zones.append(
+                    RoofZone(
+                        "I",
+                        0.0,
+                        e / 2,
+                        b,
+                        d - e / 2,
+                        c_pe["I"],
+                        c_pe["I"] * self.wind_load.q_p,
+                    )
+                )
             else:
-                zones.append(RoofZone("H", 0.0, e / 10, b, d - e / 10, c_pe["H"], c_pe["H"] * self.wind_load.q_p))
+                zones.append(
+                    RoofZone(
+                        "H",
+                        0.0,
+                        e / 10,
+                        b,
+                        d - e / 10,
+                        c_pe["H"],
+                        c_pe["H"] * self.wind_load.q_p,
+                    )
+                )
 
         else:
-            raise ValueError(f"Direction must be either 'x' or 'y', not: '{direction}'.")
+            raise ValueError(
+                f"Direction must be either 'x' or 'y', not: '{direction}'."
+            )
         return zones
 
     @property
@@ -134,13 +250,14 @@ class MonopitchRoof(Roof):
     :ivar h: Height of the building.
     :ivar wind_load: Instance of the :class:`WindLoad` class.
     """
+
     def __init__(
         self,
         zone: str | WindZone,
         terrain_category: str | TerrainCategory,
         b_x: float,
         b_y: float,
-        h: float
+        h: float,
     ) -> None:
         super().__init__(zone, terrain_category, b_x, b_y)
         self.h = h
@@ -161,7 +278,7 @@ class DuopitchRoof(Roof):
         b_x: float,
         b_y: float,
         h: float,
-        pitch_angle: float
+        pitch_angle: float,
     ) -> None:
         super().__init__(zone, terrain_category, b_x, b_y)
         self.h = h
@@ -197,28 +314,142 @@ class DuopitchRoof(Roof):
 
         if wind_direction.lower() == "x":
             zones = [
-                RoofZone("F", 0.0, 0.0, e / 10, e / 4, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("G", 0.0, e / 4, e / 10, b - 2 * e / 4, c_pe["G"], c_pe["G"] * self.wind_load.q_p),
-                RoofZone("F", 0.0, b - e / 4, e / 10, e / 4, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("H", e / 10, 0.0, d / 2 - e / 10, b, c_pe["H"], c_pe["H"] * self.wind_load.q_p),
-                RoofZone("J", d / 2, 0.0, e / 10, b, c_pe["J"], c_pe["J"] * self.wind_load.q_p),
-                RoofZone("I", d / 2 + e / 10, 0.0, d / 2 - e / 10, b, c_pe["I"], c_pe["I"] * self.wind_load.q_p),
+                RoofZone(
+                    "F",
+                    0.0,
+                    0.0,
+                    e / 10,
+                    e / 4,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "G",
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    b - 2 * e / 4,
+                    c_pe["G"],
+                    c_pe["G"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "F",
+                    0.0,
+                    b - e / 4,
+                    e / 10,
+                    e / 4,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "H",
+                    e / 10,
+                    0.0,
+                    d / 2 - e / 10,
+                    b,
+                    c_pe["H"],
+                    c_pe["H"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "J",
+                    d / 2,
+                    0.0,
+                    e / 10,
+                    b,
+                    c_pe["J"],
+                    c_pe["J"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "I",
+                    d / 2 + e / 10,
+                    0.0,
+                    d / 2 - e / 10,
+                    b,
+                    c_pe["I"],
+                    c_pe["I"] * self.wind_load.q_p,
+                ),
             ]
 
         elif wind_direction.lower() == "y":
             zones = [
-                RoofZone("F", 0.0, 0.0, e / 4, e / 10, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("G", e / 4, 0.0, b / 2 - e / 4, e / 10, c_pe["G"], c_pe["G"] * self.wind_load.q_p),
-                RoofZone("G", b / 2, 0.0, b / 2 - e / 4, e / 10, c_pe["G"], c_pe["G"] * self.wind_load.q_p),
-                RoofZone("F", b - e / 4, 0.0, e / 4, e / 10, c_pe["F"], c_pe["F"] * self.wind_load.q_p),
-                RoofZone("H", 0.0, e / 10, b / 2, e / 2 - e / 10, c_pe["H"], c_pe["H"] * self.wind_load.q_p),
-                RoofZone("H", b / 2, e / 10, b / 2, e / 2 - e / 10, c_pe["H"], c_pe["H"] * self.wind_load.q_p),
-                RoofZone("I", 0.0, e / 2, b / 2, d - e / 2, c_pe["I"], c_pe["I"] * self.wind_load.q_p),
-                RoofZone("I", b / 2, e / 2, b / 2, d - e / 2, c_pe["I"], c_pe["I"] * self.wind_load.q_p),
+                RoofZone(
+                    "F",
+                    0.0,
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "G",
+                    e / 4,
+                    0.0,
+                    b / 2 - e / 4,
+                    e / 10,
+                    c_pe["G"],
+                    c_pe["G"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "G",
+                    b / 2,
+                    0.0,
+                    b / 2 - e / 4,
+                    e / 10,
+                    c_pe["G"],
+                    c_pe["G"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "F",
+                    b - e / 4,
+                    0.0,
+                    e / 4,
+                    e / 10,
+                    c_pe["F"],
+                    c_pe["F"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "H",
+                    0.0,
+                    e / 10,
+                    b / 2,
+                    e / 2 - e / 10,
+                    c_pe["H"],
+                    c_pe["H"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "H",
+                    b / 2,
+                    e / 10,
+                    b / 2,
+                    e / 2 - e / 10,
+                    c_pe["H"],
+                    c_pe["H"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "I",
+                    0.0,
+                    e / 2,
+                    b / 2,
+                    d - e / 2,
+                    c_pe["I"],
+                    c_pe["I"] * self.wind_load.q_p,
+                ),
+                RoofZone(
+                    "I",
+                    b / 2,
+                    e / 2,
+                    b / 2,
+                    d - e / 2,
+                    c_pe["I"],
+                    c_pe["I"] * self.wind_load.q_p,
+                ),
             ]
 
         else:
-            raise ValueError(f"Direction must be either 'x' or 'y', not: '{wind_direction}'.")
+            raise ValueError(
+                f"Direction must be either 'x' or 'y', not: '{wind_direction}'."
+            )
 
         return zones
 
@@ -281,7 +512,9 @@ class RoofZone:
         return f"RoofZone({self.roof_zone}, {self.geometry}, {self.c_pe}, {self.w_e})"
 
 
-def calculate_rectangle_points(x_bl: float, y_bl: float, dx: float, dy: float) -> list[list[float]]:
+def calculate_rectangle_points(
+    x_bl: float, y_bl: float, dx: float, dy: float
+) -> list[list[float]]:
     """
     Calculate corner points of a rectangle.
 
@@ -291,16 +524,10 @@ def calculate_rectangle_points(x_bl: float, y_bl: float, dx: float, dy: float) -
     :param dy: Height of the rectangle.
     :return: A list of corner points of the rectangle.
     """
-    return [
-        [x_bl, y_bl],
-        [x_bl + dx, y_bl],
-        [x_bl + dx, y_bl + dy],
-        [x_bl, y_bl + dy]
-    ]
+    return [[x_bl, y_bl], [x_bl + dx, y_bl], [x_bl + dx, y_bl + dy], [x_bl, y_bl + dy]]
 
 
 if __name__ == "__main__":
     roof = DuopitchRoof("I", "II", 10.0, 20.0, 30.0, 30.0)
 
     print("")
-
