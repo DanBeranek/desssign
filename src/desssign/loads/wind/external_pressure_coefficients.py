@@ -67,6 +67,15 @@ def get_flat_roof_coefficient(
     sign: str | None = None,
     ratio: float | None = None,
 ) -> float:
+    """
+    Get the external pressure coefficient for flat roofs with sharp eaves or with parapets.
+
+    :param flat_roof_type: The type of flat roof, either 'sharp_eaves' or 'with_parapets'.
+    :param zone_key: The zone key for the external pressure coefficient.
+    :param coefficient_label: The label of the coefficient to be retrieved, either 'c_pu10' or 'c_pu1'.
+    :param sign: The sign of the coefficient, either '+' (pressure) or '-' (suction).
+    :param ratio: The ratio of the height of the parapet to the height of the building.
+    """
     if flat_roof_type == FlatRoofType.SHARP_EAVES:
         coefficients_data = FLAT_ROOF_SHARP_EAVES
         area_data = coefficients_data.get(zone_key, {})
@@ -505,6 +514,15 @@ def get_duopitch_roof_coefficient(
     pitch_angle: float,
     wind_direction: str,
 ) -> float:
+    """
+    Get the external pressure coefficient for duopitch roofs.
+
+    :param zone_key: The zone key for the external pressure coefficient.
+    :param coefficient_label: The label of the coefficient to be retrieved, either 'c_pe10' or 'c_pe1'.
+    :param sign: The sign of the coefficient, either '+' (pressure) or '-' (suction).
+    :param pitch_angle: The pitch angle of the roof.
+    :param wind_direction: The wind direction, either 'x' or 'y'.
+    """
     if wind_direction == "x":
         coefficients_data = DUOPITCH_ROOF_COEFFICIENTS_0
     elif wind_direction == "y":

@@ -13,6 +13,7 @@ from desssign.loads.wind.enums import WindZone
 
 
 class WindLoad:
+
     """
     :ivar zone: Wind zone.
     :ivar c_dir: Directional factor.
@@ -29,7 +30,7 @@ class WindLoad:
         c_dir: float = DIRECTIONAL_FACTOR,
         c_season: float = SEASONAL_FACTOR,
         rho_air: float = AIR_DENSITY,
-    ):
+    ) -> None:
         self.zone = zone
         self.terrain_category = terrain_category
         self.z_e = z_e
@@ -71,23 +72,17 @@ class WindLoad:
 
     @property
     def z_0(self) -> float:
-        """
-        Roughness length in m according to EN 1991-1-4, table 4.1.
-        """
+        """Roughness length in m according to EN 1991-1-4, table 4.1."""
         return ROUGHNESS_LENGTH[self.terrain_category]
 
     @property
     def z_min(self) -> float:
-        """
-        Minimum height in m according to EN 1991-1-4, table 4.1.
-        """
+        """Minimum height in m according to EN 1991-1-4, table 4.1."""
         return MINIMUM_HEIGHT[self.terrain_category]
 
     @property
     def z_max(self) -> float:
-        """
-        Maximum height in m according to EN 1991-1-4.
-        """
+        """Maximum height in m according to EN 1991-1-4."""
         return 200.0
 
     @property
@@ -112,23 +107,17 @@ class WindLoad:
 
     @property
     def sigma_v(self) -> float:
-        """
-        Standard deviation of the turbulence in m/s according to EN 1991-1-4, 4.4(1), eq. (4.6).
-        """
+        """Standard deviation of the turbulence in m/s according to EN 1991-1-4, 4.4(1), eq. (4.6)."""
         return self.k_r * self.v_b * self.k_l
 
     @property
     def c_o(self) -> float:
-        """
-        Orography factor.
-        """
+        """Orography factor."""
         return 1.0
 
     @property
     def c_r(self) -> float:
-        """
-        Roughness factor according to EN 1991-1-4, 4.3.2(1), eq. (4.4).
-        """
+        """Roughness factor according to EN 1991-1-4, 4.3.2(1), eq. (4.4)."""
         if self.z_min <= self.z_e <= self.z_max:
             return self.k_r * log(self.z_e / self.z_0)
         elif self.z_e < self.z_min:
@@ -138,16 +127,12 @@ class WindLoad:
 
     @property
     def v_m(self) -> float:
-        """
-        Mean wind velocity in m/s according to EN 1991-1-4, 4.3.1 (1), eq. (4.3).
-        """
+        """Mean wind velocity in m/s according to EN 1991-1-4, 4.3.1 (1), eq. (4.3)."""
         return self.c_r * self.c_o * self.v_b
 
     @property
     def I_v(self) -> float:
-        """
-        Turbulence intensity according to EN 1991-1-4, 4.4.1(1), eq. (4.7).
-        """
+        """Turbulence intensity according to EN 1991-1-4, 4.4.1(1), eq. (4.7)."""
         if self.z_min <= self.z_e <= self.z_max:
             return self.sigma_v / self.v_m
         elif self.z_e < self.z_min:
@@ -157,35 +142,10 @@ class WindLoad:
 
     @property
     def q_p(self) -> float:
-        """
-        Peak velocity pressure in N/m² according to EN 1991-1-4, 4.5.1(1), eq. (4.8).
-        """
+        """Peak velocity pressure in N/m² according to EN 1991-1-4, 4.5.1(1), eq. (4.8)."""
         return (1 + 7 * self.I_v) * 1 / 2 * self.rho_air * self.v_m**2
 
     @property
     def c_e(self) -> float:
-        """
-        Exposure factor according to EN 1991-1-4, 4.5.1(1), eq. (4.9).
-        """
+        """Exposure factor according to EN 1991-1-4, 4.5.1(1), eq. (4.9)."""
         return self.q_p / self.q_b
-
-
-if __name__ == "__main__":
-    wind = WindLoad(zone="II", terrain_category="III", z_e=7.72)
-    print(wind.v_b0)
-    print(wind.v_b)
-    print(wind.q_b)
-    print(wind.z_0)
-    print(wind.z_min)
-    print(wind.z_max)
-    print(wind.k_r)
-    print(wind.k_l)
-    print(wind.sigma_v)
-    print(wind.c_o)
-    print(wind.c_r)
-    print(wind.v_m)
-    print(wind.I_v)
-    print(wind.q_p)
-    print(wind.c_e)
-
-    print("")

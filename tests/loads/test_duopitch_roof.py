@@ -37,7 +37,7 @@ def test_duopitch_roof_10_degrees() -> None:
     ]
 
     zones_list = [
-        roof.zones_wind_x_neg_neg or [],
+        roof.zones_x_neg_neg or [],
         roof.zones_wind_x_neg_pos or [],
         roof.zones_wind_x_pos_neg or [],
         roof.zones_wind_x_pos_pos or [],
@@ -106,7 +106,7 @@ def test_duopitch_roof_43_degrees() -> None:
     ]
 
     zones_list = [
-        roof.zones_wind_x_neg_neg or [],
+        roof.zones_x_neg_neg or [],
         roof.zones_wind_x_neg_pos or [],
         roof.zones_wind_x_pos_neg or [],
         roof.zones_wind_x_pos_pos or [],

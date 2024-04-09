@@ -7,9 +7,7 @@ from desssign.loads.wind.roofs import FlatRoof
 
 
 def test_flat_roof_with_sharp_eaves_low_building() -> None:
-    """
-    2 * h < b
-    """
+    """Case when 2 * h < b."""
     flat_roof = FlatRoof(
         roof_type=FlatRoofType.SHARP_EAVES,
         zone=WindZone.II,
@@ -37,10 +35,10 @@ def test_flat_roof_with_sharp_eaves_low_building() -> None:
     ]
 
     zones_list = [
-        flat_roof.zones_wind_x_pressure or [],
-        flat_roof.zones_wind_x_suction or [],
-        flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or [],
+        flat_roof.zones_x_neg_pos or [],
+        flat_roof.zones_x_neg_neg or [],
+        flat_roof.zones_y_neg_pos or [],
+        flat_roof.zones_y_neg_neg or [],
     ]
 
     expected_geometry = [
@@ -72,9 +70,7 @@ def test_flat_roof_with_sharp_eaves_low_building() -> None:
 
 
 def test_flat_roof_with_sharp_eaves_high_building() -> None:
-    """
-    b < 2 * h
-    """
+    """Case when b < 2 * h."""
     flat_roof = FlatRoof(
         roof_type=FlatRoofType.SHARP_EAVES,
         zone=WindZone.II,
@@ -101,10 +97,10 @@ def test_flat_roof_with_sharp_eaves_high_building() -> None:
     ]
 
     zones_list = [
-        flat_roof.zones_wind_x_pressure or [],
-        flat_roof.zones_wind_x_suction or [],
-        flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or [],
+        flat_roof.zones_x_neg_pos or [],
+        flat_roof.zones_x_neg_neg or [],
+        flat_roof.zones_y_neg_pos or [],
+        flat_roof.zones_y_neg_neg or [],
     ]
 
     expected_geometry = [
@@ -165,10 +161,10 @@ def test_flat_roof_with_parapets_low_building() -> None:
     ]
 
     zones_list = [
-        flat_roof.zones_wind_x_pressure or [],
-        flat_roof.zones_wind_x_suction or [],
-        flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or [],
+        flat_roof.zones_x_neg_pos or [],
+        flat_roof.zones_x_neg_neg or [],
+        flat_roof.zones_y_neg_pos or [],
+        flat_roof.zones_y_neg_neg or [],
     ]
 
     expected_geometry = [
@@ -227,10 +223,10 @@ def test_flat_roof_with_parapets_high_building() -> None:
     ]
 
     zones_list = [
-        flat_roof.zones_wind_x_pressure or [],
-        flat_roof.zones_wind_x_suction or [],
-        flat_roof.zones_wind_y_pressure or [],
-        flat_roof.zones_wind_y_suction or [],
+        flat_roof.zones_x_neg_pos or [],
+        flat_roof.zones_x_neg_neg or [],
+        flat_roof.zones_y_neg_pos or [],
+        flat_roof.zones_y_neg_neg or [],
     ]
 
     expected_geometry = [
