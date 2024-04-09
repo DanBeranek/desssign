@@ -13,8 +13,9 @@ from desssign.loads.wind.enums import WindZone
 
 
 class WindLoad:
-
     """
+    Class representing wind load according to EN 1991-1-4.
+
     :ivar zone: Wind zone.
     :ivar c_dir: Directional factor.
     :ivar c_season: Seasonal factor.

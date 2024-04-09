@@ -139,6 +139,8 @@ classmethod-decorators = ["classmethod", "validator", "root_validator", "pydanti
     "S101",    # asserts are encouraged in pytest
     "E741",    # ignore ambigious variable name
 ]
+"**/wind/enums.py" = ["E741"]  # ignore ambigious variable name
+"**/snow/enums.py" = ["E741"]  # ignore ambigious variable name
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
