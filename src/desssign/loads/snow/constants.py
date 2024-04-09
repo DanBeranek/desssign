@@ -1,5 +1,5 @@
-from desssign.loads.snow.enums import Topography
 from desssign.loads.snow.enums import SnowZone
+from desssign.loads.snow.enums import Topography
 
 EXPOSURE_COEFFICIENTS = {
     Topography.WINDSWEPT: 0.8,

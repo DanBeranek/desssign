@@ -3,15 +3,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from desssign.loads.snow.snow_enums import SnowZone
-    from desssign.loads.snow.snow_enums import Topography
+    from desssign.loads.snow.enums import SnowZone
+    from desssign.loads.snow.enums import Topography
 
-from desssign.loads.snow.constants import EXPOSURE_COEFFICIENTS, SNOW_LOAD_ON_THE_GROUND
+from desssign.loads.snow.constants import EXPOSURE_COEFFICIENTS
+from desssign.loads.snow.constants import SNOW_LOAD_ON_THE_GROUND
 
 
 def calculate_shape_coefficient(
-    roof_pitch_angle: float,
-    is_prevented_sliding: bool = False
+    roof_pitch_angle: float, is_prevented_sliding: bool = False
 ) -> float:
     """
     Calculate the shape coefficient for snow load calculations.
@@ -40,7 +40,7 @@ def calculate_snow_load_on_the_roof(
     snow_zone: str | SnowZone,
     topography: str | Topography,
     thermal_coefficient: float = 1.0,
-    is_prevented_sliding: bool = False
+    is_prevented_sliding: bool = False,
 ) -> float:
     """
     Calculate the snow load on the roof according to EN 1991-1-3.
