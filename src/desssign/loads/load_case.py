@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from framesss.pre.cases import LoadCase
 
-from desssign.loads.enums import LoadType
+from desssign.loads.enums import LoadType, LoadDurationClass
 from desssign.loads.enums import VariableCategory
 
 
@@ -13,6 +13,7 @@ class DesignLoadCase(LoadCase):
     :param label: The label of the load case.
     :param load_type: The type of the load case. Either permanent, variable or accidental.
     :param category: The category of the variable load case. Only required for variable load cases.
+    :param load_duration_class: The load duration class of the load case.
     """
 
     def __init__(
@@ -20,6 +21,7 @@ class DesignLoadCase(LoadCase):
         label: str,
         load_type: str | LoadType,
         category: str | VariableCategory | None = None,
+        load_duration_class: str | LoadDurationClass | None = None,
     ) -> None:
         """Init the DesignLoadCase class."""
         super().__init__(label)
@@ -29,6 +31,8 @@ class DesignLoadCase(LoadCase):
             self.category: VariableCategory | None = VariableCategory(category)
         else:
             self.category = None
+
+        self.load_duration_class = load_duration_class
 
     def __repr__(self) -> str:
         """Return a string representation of the DesignLoadCase object."""

@@ -7,6 +7,8 @@ from desssign.loads.enums import LimitState
 from desssign.loads.enums import LoadType
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSCombination
+from desssign.loads.enums import ULSAlternativeCombination
+from desssign.loads.load_case_combination import DesignLoadCaseCombination
 from desssign.loads.load_combination_generator.generate_combinations import (
     generate_combination,
 )
@@ -14,7 +16,7 @@ from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
     from desssign.loads.load_case_group import LoadCaseGroup
-    from desssign.loads.load_combination import DesignLoadCaseCombination
+    from desssign.loads.load_case_combination import DesignLoadCaseCombination
 
 
 class CombinationsGenerator:
@@ -81,7 +83,9 @@ class CombinationsGenerator:
             if combination not in unique_combinations:
                 unique_combinations.append(combination)
 
-        c = 0
+        label = f"{self.limit_state.value.upper()}-{self.combination_type.value}"
+
+        c = 1
         for unique_combination in unique_combinations:
             permanent_cases = [
                 case
@@ -97,25 +101,79 @@ class CombinationsGenerator:
             if variable_cases:
                 for i, leading_variable_case in enumerate(variable_cases):
                     # loop through every possible combination of leading + other variable for this unique combination
-                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1 :]
+                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1:]
 
-                    self.combinations.extend(
-                        generate_combination(
-                            c,
-                            permanent_cases,
-                            leading_variable_case,
-                            other_variable_cases,
-                            self.combination_type,
+                    if self.combination_type == ULSCombination.ALTERNATIVE:
+                        self.combinations.append(
+                            DesignLoadCaseCombination(
+                                label=f"{label}({c}a)",
+                                limit_state=self.limit_state,
+                                combination_type=self.combination_type,
+                                permanent_cases=permanent_cases,
+                                leading_variable_case=leading_variable_case,
+                                other_variable_cases=other_variable_cases,
+                                alternative_combination=ULSAlternativeCombination.REDUCED_VARIABLE,
+                            )
                         )
-                    )
+                        self.combinations.append(
+                            DesignLoadCaseCombination(
+                                label=f"{label}({c}b)",
+                                limit_state=self.limit_state,
+                                combination_type=self.combination_type,
+                                permanent_cases=permanent_cases,
+                                leading_variable_case=leading_variable_case,
+                                other_variable_cases=other_variable_cases,
+                                alternative_combination=ULSAlternativeCombination.REDUCED_PERMANENT,
+                            )
+                        )
+                    else:
+                        self.combinations.append(
+                            DesignLoadCaseCombination(
+                                label=f"{label}({c})",
+                                limit_state=self.limit_state,
+                                combination_type=self.combination_type,
+                                permanent_cases=permanent_cases,
+                                leading_variable_case=leading_variable_case,
+                                other_variable_cases=other_variable_cases,
+                            )
+                        )
 
                     c += 1
-            else:  # in case there is only permanent cases
-                self.combinations.extend(
-                    generate_combination(
-                        c, permanent_cases, None, [], self.combination_type
+            else:  # in case there are only permanent cases
+                if self.combination_type == ULSCombination.ALTERNATIVE:
+                    self.combinations.append(
+                        DesignLoadCaseCombination(
+                            label=f"{label}({c}a)",
+                            limit_state=self.limit_state,
+                            combination_type=self.combination_type,
+                            permanent_cases=permanent_cases,
+                            leading_variable_case=None,
+                            other_variable_cases=[],
+                            alternative_combination=ULSAlternativeCombination.REDUCED_VARIABLE,
+                        )
                     )
-                )
+                    self.combinations.append(
+                        DesignLoadCaseCombination(
+                            label=f"{label}({c}b)",
+                            limit_state=self.limit_state,
+                            combination_type=self.combination_type,
+                            permanent_cases=permanent_cases,
+                            leading_variable_case=None,
+                            other_variable_cases=[],
+                            alternative_combination=ULSAlternativeCombination.REDUCED_PERMANENT,
+                        )
+                    )
+                else:
+                    self.combinations.append(
+                        DesignLoadCaseCombination(
+                            label=f"{label}({c})",
+                            limit_state=self.limit_state,
+                            combination_type=self.combination_type,
+                            permanent_cases=permanent_cases,
+                            leading_variable_case=None,
+                            other_variable_cases=[],
+                        )
+                    )
                 c += 1
 
 
@@ -127,8 +185,8 @@ if __name__ == "__main__":
     G2 = DesignLoadCase("G2", "permanent")
     LG1 = LoadCaseGroup([G1, G2], "together")
 
-    Q1 = DesignLoadCase("Q1", "variable", "category a")
-    Q2 = DesignLoadCase("Q2", "variable", "category b")
+    Q1 = DesignLoadCase("Q1", "variable", "a")
+    Q2 = DesignLoadCase("Q2", "variable", "b")
     LG2 = LoadCaseGroup([Q1, Q2], "standard")
 
     S1 = DesignLoadCase("S1", "variable", "snow < 1000 m")
@@ -142,11 +200,12 @@ if __name__ == "__main__":
     W4 = DesignLoadCase("W4", "variable", "wind")
     LG4 = LoadCaseGroup([W1, W2, W3, W4], "exclusive")
 
-    ULS = CombinationsGenerator("ULS", "basic")
+    ULS = CombinationsGenerator("ULS", "alternative")
 
     ULS.generate_combinations([LG1, LG2], [LG1, LG3, LG4])
 
     for comb in ULS.combinations:
+        print(comb.label)
         print(comb.combination_key)
 
-    print("")
+        print("")
