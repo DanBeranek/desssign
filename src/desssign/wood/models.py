@@ -2,22 +2,22 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from framesss.fea.models.model import Model
-from framesss.fea.analysis.analysis import Analysis
-from framesss.fea.analysis.frame_xz_analysis import FrameXZAnalysis
 from framesss.enums import BeamConnection
 from framesss.enums import Element1DType
+from framesss.fea.analysis.analysis import Analysis
+from framesss.fea.analysis.frame_xz_analysis import FrameXZAnalysis
+from framesss.fea.models.model import Model
 
-from desssign.wood.wood_member import WoodMember1D
-from desssign.loads.load_case import DesignLoadCase
-from desssign.loads.enums import LoadType
-from desssign.loads.enums import VariableCategory
-from desssign.loads.enums import LoadDurationClass
 from desssign.loads.enums import LimitState
-from desssign.loads.enums import ULSCombination
+from desssign.loads.enums import LoadDurationClass
+from desssign.loads.enums import LoadType
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSAlternativeCombination
+from desssign.loads.enums import ULSCombination
+from desssign.loads.enums import VariableCategory
+from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
+from desssign.wood.wood_member import WoodMember1D
 
 if TYPE_CHECKING:
     from framesss.fea.node import Node
@@ -26,7 +26,16 @@ if TYPE_CHECKING:
 
 
 class WoodModel(Model):
-    def __init__(self, analysis: Analysis):
+    """
+    Class represent the entire structural analysis model.
+
+    Upon :class:`framesss.fea.models.Model` class, it changes specific methods for creating wood members.
+
+    :param analysis: The analysis object.
+    """
+
+    def __init__(self, analysis: Analysis) -> None:
+        """Init the WoodModel object."""
         super().__init__(analysis)
 
     def add_member(
@@ -80,13 +89,21 @@ class WoodModel(Model):
         """
         load_type = LoadType(load_type)
         category = VariableCategory(category) if category is not None else None
-        load_duration_class = LoadDurationClass(load_duration_class) if load_duration_class is not None else None
+        load_duration_class = (
+            LoadDurationClass(load_duration_class)
+            if load_duration_class is not None
+            else None
+        )
         if load_type == LoadType.VARIABLE and category is None:
-            raise ValueError("Variable load cases require a category.\n"
-                             f"Available categories: {[vc.value for vc in VariableCategory]}")
+            raise ValueError(
+                "Variable load cases require a category.\n"
+                f"Available categories: {[vc.value for vc in VariableCategory]}"
+            )
         if load_duration_class is None:
-            raise ValueError("Load duration class must be provided.\n"
-                             f"Available classes: {[ldc.value for ldc in LoadDurationClass]}")
+            raise ValueError(
+                "Load duration class must be provided.\n"
+                f"Available classes: {[ldc.value for ldc in LoadDurationClass]}"
+            )
 
         new_case = DesignLoadCase(label, load_type, category, load_duration_class)
         self.load_cases.add(new_case)
@@ -100,8 +117,11 @@ class WoodModel(Model):
         permanent_cases: list[DesignLoadCase] = None,
         leading_variable_case: DesignLoadCase | None = None,
         other_variable_cases: list[DesignLoadCase] = None,
-        **kwargs
-    ) -> DesignLoadCaseCombination | tuple[DesignLoadCaseCombination, DesignLoadCaseCombination]:
+        **kwargs: list[DesignLoadCase],
+    ) -> (
+        DesignLoadCaseCombination
+        | tuple[DesignLoadCaseCombination, DesignLoadCaseCombination]
+    ):
         """
         Add and return new :class:`LoadCaseCombination` instance.
 
@@ -149,9 +169,13 @@ class WoodModel(Model):
         self.load_combinations.add(new_combination)
         return new_combination
 
-    def perform_uls_checks(self):
-
-        combinations = [comb for comb in self.load_combinations if comb.limit_state == LimitState.ULS]
+    def perform_uls_checks(self) -> None:
+        """Perform ULS checks on the model members."""
+        combinations = [
+            comb
+            for comb in self.load_combinations
+            if comb.limit_state == LimitState.ULS
+        ]
 
         for member in self.members:
             member.perform_uls_checks(combinations)

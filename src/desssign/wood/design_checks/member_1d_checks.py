@@ -4,17 +4,18 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from desssign.wood.design_checks.design_check import ColumnStabilityCheck
 from desssign.wood.design_checks.design_check import BeamStabilityCheck
-from desssign.wood.design_checks.design_check import ShearCheck
+from desssign.wood.design_checks.design_check import ColumnStabilityCheck
+from desssign.wood.design_checks.design_check import (
+    CombinedBendingAndAxialCompressionCheck,
+)
 from desssign.wood.design_checks.design_check import CombinedBendingAndAxialTensionCheck
-from desssign.wood.design_checks.design_check import CombinedBendingAndAxialCompressionCheck
-
+from desssign.wood.design_checks.design_check import ShearCheck
 from desssign.wood.enums import CheckResult
 
 if TYPE_CHECKING:
-    from desssign.wood.wood_member import WoodMember1D
     from desssign.loads.load_case_combination import DesignLoadCaseCombination
+    from desssign.wood.wood_member import WoodMember1D
 
 
 class Member1DChecks:
@@ -23,30 +24,22 @@ class Member1DChecks:
 
     :param member: The 1D wood member.
     """
+
     def __init__(self, member: WoodMember1D) -> None:
         """Init the Member1DChecks object."""
         self.member = member
 
-        self.column_stability: dict[
-            DesignLoadCaseCombination,
-            ColumnStabilityCheck
-        ] = {}
-        self.beam_stability: dict[
-            DesignLoadCaseCombination,
-            BeamStabilityCheck
-        ] = {}
+        self.column_stability: dict[DesignLoadCaseCombination, ColumnStabilityCheck] = (
+            {}
+        )
+        self.beam_stability: dict[DesignLoadCaseCombination, BeamStabilityCheck] = {}
 
-        self.shear_check: dict[
-            DesignLoadCaseCombination,
-            ShearCheck
-        ] = {}
+        self.shear_check: dict[DesignLoadCaseCombination, ShearCheck] = {}
         self.tension_with_bending_check: dict[
-            DesignLoadCaseCombination,
-            CombinedBendingAndAxialTensionCheck
+            DesignLoadCaseCombination, CombinedBendingAndAxialTensionCheck
         ] = {}
         self.compression_with_bending_check: dict[
-            DesignLoadCaseCombination,
-            CombinedBendingAndAxialCompressionCheck
+            DesignLoadCaseCombination, CombinedBendingAndAxialCompressionCheck
         ] = {}
 
     @property
@@ -71,10 +64,8 @@ class Member1DChecks:
             return CheckResult.PASS
         return CheckResult.FAIL
 
-
     def perform_uls_checks(
-        self,
-        load_case_combinations: list[DesignLoadCaseCombination]
+        self, load_case_combinations: list[DesignLoadCaseCombination]
     ) -> None:
         """
         Perform all design checks on the member for given load case combinations.
@@ -94,23 +85,47 @@ class Member1DChecks:
         default_peak_length = self.member.results.peak_x_local.get(combination).shape[0]
 
         # Safe retrieval of internal forces using the .get method with default zero arrays
-        axial = self.member.results.axial_forces.get(combination, np.zeros(default_length))
-        axial_peaks = self.member.results.peak_axial_forces.get(combination, np.zeros(default_peak_length))
+        axial = self.member.results.axial_forces.get(
+            combination, np.zeros(default_length)
+        )
+        axial_peaks = self.member.results.peak_axial_forces.get(
+            combination, np.zeros(default_peak_length)
+        )
 
-        shear_y = self.member.results.shear_forces_y.get(combination, np.zeros(default_length))
-        shear_y_peaks = self.member.results.peak_shear_forces_y.get(combination, np.zeros(default_peak_length))
+        shear_y = self.member.results.shear_forces_y.get(
+            combination, np.zeros(default_length)
+        )
+        shear_y_peaks = self.member.results.peak_shear_forces_y.get(
+            combination, np.zeros(default_peak_length)
+        )
 
-        shear_z = self.member.results.shear_forces_z.get(combination, np.zeros(default_length))
-        shear_z_peaks = self.member.results.peak_shear_forces_z.get(combination, np.zeros(default_peak_length))
+        shear_z = self.member.results.shear_forces_z.get(
+            combination, np.zeros(default_length)
+        )
+        shear_z_peaks = self.member.results.peak_shear_forces_z.get(
+            combination, np.zeros(default_peak_length)
+        )
 
-        torsion = self.member.results.torsional_moments.get(combination, np.zeros(default_length))
-        torsion_peaks = self.member.results.peak_torsional_moments.get(combination, np.zeros(default_peak_length))
+        torsion = self.member.results.torsional_moments.get(
+            combination, np.zeros(default_length)
+        )
+        torsion_peaks = self.member.results.peak_torsional_moments.get(
+            combination, np.zeros(default_peak_length)
+        )
 
-        bending_y = self.member.results.bending_moments_y.get(combination, np.zeros(default_length))
-        bending_y_peaks = self.member.results.peak_bending_moments_y.get(combination, np.zeros(default_peak_length))
+        bending_y = self.member.results.bending_moments_y.get(
+            combination, np.zeros(default_length)
+        )
+        bending_y_peaks = self.member.results.peak_bending_moments_y.get(
+            combination, np.zeros(default_peak_length)
+        )
 
-        bending_z = self.member.results.bending_moments_z.get(combination, np.zeros(default_length))
-        bending_z_peaks = self.member.results.peak_bending_moments_z.get(combination, np.zeros(default_peak_length))
+        bending_z = self.member.results.bending_moments_z.get(
+            combination, np.zeros(default_length)
+        )
+        bending_z_peaks = self.member.results.peak_bending_moments_z.get(
+            combination, np.zeros(default_peak_length)
+        )
 
         # Concatenating the regular and peak forces/moments
         concatenated_axial = np.concatenate((axial, axial_peaks))
@@ -126,7 +141,7 @@ class Member1DChecks:
             concatenated_shear_z,
             concatenated_torsion,
             concatenated_bending_y,
-            concatenated_bending_z
+            concatenated_bending_z,
         )
 
     def perform_column_stability_checks(
@@ -241,14 +256,16 @@ class Member1DChecks:
                 load_duration_class=combination.load_duration_class,
             )
 
-            self.tension_with_bending_check[combination] = CombinedBendingAndAxialTensionCheck(
-                sigma_t0d=sigma_t0d,
-                sigma_myd=sigma_myd,
-                sigma_mzd=sigma_mzd,
-                f_t0d=f_cd,
-                f_myd=f_md,
-                f_mzd=f_md,
-                k_m=self.member.section.k_m,
+            self.tension_with_bending_check[combination] = (
+                CombinedBendingAndAxialTensionCheck(
+                    sigma_t0d=sigma_t0d,
+                    sigma_myd=sigma_myd,
+                    sigma_mzd=sigma_mzd,
+                    f_t0d=f_cd,
+                    f_myd=f_md,
+                    f_mzd=f_md,
+                    k_m=self.member.section.k_m,
+                )
             )
 
     def perform_compression_with_bending_checks(
@@ -274,21 +291,14 @@ class Member1DChecks:
                 load_duration_class=combination.load_duration_class,
             )
 
-            self.compression_with_bending_check[combination] = CombinedBendingAndAxialCompressionCheck(
-                sigma_c0d=sigma_c0d,
-                sigma_myd=sigma_myd,
-                sigma_mzd=sigma_mzd,
-                f_c0d=f_c0d,
-                f_myd=f_md,
-                f_mzd=f_md,
-                k_m=self.member.section.k_m,
+            self.compression_with_bending_check[combination] = (
+                CombinedBendingAndAxialCompressionCheck(
+                    sigma_c0d=sigma_c0d,
+                    sigma_myd=sigma_myd,
+                    sigma_mzd=sigma_mzd,
+                    f_c0d=f_c0d,
+                    f_myd=f_md,
+                    f_mzd=f_md,
+                    k_m=self.member.section.k_m,
+                )
             )
-
-
-
-
-
-
-
-
-

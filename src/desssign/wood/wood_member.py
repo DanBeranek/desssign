@@ -10,14 +10,13 @@ from desssign.wood.design_checks.member_1d_checks import Member1DChecks
 if TYPE_CHECKING:
     import numpy as np
     import numpy.typing as npt
-
-    from framesss.fea.node import Node
-    from framesss.fea.analysis.analysis import Analysis
     from framesss.enums import BeamConnection
     from framesss.enums import Element1DType
+    from framesss.fea.analysis.analysis import Analysis
+    from framesss.fea.node import Node
 
-    from desssign.wood.wood_section import WoodRectangularSection
     from desssign.loads.load_case_combination import DesignLoadCaseCombination
+    from desssign.wood.wood_section import WoodRectangularSection
 
 
 class WoodMember1D(Member1D):
@@ -36,6 +35,7 @@ class WoodMember1D(Member1D):
                                       coordinate system of the member.
     :param analysis: The :class:`Analysis` object.
     """
+
     def __init__(
         self,
         label: str,
@@ -91,7 +91,11 @@ class WoodMember1D(Member1D):
 
         EN 1995-1-1, 6.3.2(1), eq. (6.21)
         """
-        return self.lambda_y / math.pi * math.sqrt(self.section.material.f_c0k / self.section.material.E_m0k)
+        return (
+            self.lambda_y
+            / math.pi
+            * math.sqrt(self.section.material.f_c0k / self.section.material.E_m0k)
+        )
 
     @property
     def lambda_rel_z(self) -> float:
@@ -100,7 +104,11 @@ class WoodMember1D(Member1D):
 
         EN 1995-1-1, 6.3.2(1), eq. (6.22)
         """
-        return self.lambda_z / math.pi * math.sqrt(self.section.material.f_c0k / self.section.material.E_m0k)
+        return (
+            self.lambda_z
+            / math.pi
+            * math.sqrt(self.section.material.f_c0k / self.section.material.E_m0k)
+        )
 
     @property
     def k_y(self) -> float:
@@ -111,7 +119,7 @@ class WoodMember1D(Member1D):
         """
         beta_c = self.section.material.beta_c
         lambda_rel_y = self.lambda_rel_y
-        return 0.5 * (1 + beta_c * (lambda_rel_y - 0.3) + lambda_rel_y ** 2)
+        return 0.5 * (1 + beta_c * (lambda_rel_y - 0.3) + lambda_rel_y**2)
 
     @property
     def k_z(self) -> float:
@@ -122,7 +130,7 @@ class WoodMember1D(Member1D):
         """
         beta_c = self.section.material.beta_c
         lambda_rel_z = self.lambda_rel_z
-        return 0.5 * (1 + beta_c * (lambda_rel_z - 0.3) + lambda_rel_z ** 2)
+        return 0.5 * (1 + beta_c * (lambda_rel_z - 0.3) + lambda_rel_z**2)
 
     @property
     def k_cy(self) -> float:
@@ -131,7 +139,7 @@ class WoodMember1D(Member1D):
 
         EN 1995-1-1, 6.3.2(3), eq. (6.25)
         """
-        return 1.0 / (self.k_y + math.sqrt(self.k_y ** 2 - self.lambda_rel_y ** 2))
+        return 1.0 / (self.k_y + math.sqrt(self.k_y**2 - self.lambda_rel_y**2))
 
     @property
     def k_cz(self) -> float:
@@ -140,7 +148,7 @@ class WoodMember1D(Member1D):
 
         EN 1995-1-1, 6.3.2(3), eq. (6.26)
         """
-        return 1.0 / (self.k_z + math.sqrt(self.k_z ** 2 - self.lambda_rel_z ** 2))
+        return 1.0 / (self.k_z + math.sqrt(self.k_z**2 - self.lambda_rel_z**2))
 
     @property
     def l_ef(self) -> float:
@@ -162,8 +170,8 @@ class WoodMember1D(Member1D):
         b = self.section.height_y
         E = self.section.material.E_m0k
         h = self.section.height_z
-        l = self.l_ef
-        return 0.78 * b ** 2 * E / (h * l)
+        l_ef = self.l_ef
+        return 0.78 * b**2 * E / (h * l_ef)
 
     @property
     def lambda_rel_m(self) -> float:
@@ -182,8 +190,10 @@ class WoodMember1D(Member1D):
         EN 1995-1-1, 6.3.3(4), eq. (6.34)
         EN 1995-1-1, 6.3.3(5)
         """
-        if (self.is_prevented_lateral_displacement_at_compressive_edge
-                and self.is_prevented_torsional_rotation_at_supports):
+        if (
+            self.is_prevented_lateral_displacement_at_compressive_edge
+            and self.is_prevented_torsional_rotation_at_supports
+        ):
             return 1.0
 
         if self.lambda_rel_m <= 0.75:
@@ -191,8 +201,10 @@ class WoodMember1D(Member1D):
         elif 0.75 < self.lambda_rel_m <= 1.4:
             return 1.56 - 0.75 * self.lambda_rel_m
         else:
-            return 1 / self.lambda_rel_m ** 2
+            return 1 / self.lambda_rel_m**2
 
-    def perform_uls_checks(self, load_combinations: list[DesignLoadCaseCombination]) -> None:
+    def perform_uls_checks(
+        self, load_combinations: list[DesignLoadCaseCombination]
+    ) -> None:
         """Perform the design checks."""
         self.design_checks.perform_uls_checks(load_combinations)

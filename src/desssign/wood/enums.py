@@ -5,6 +5,7 @@ from framesss.enums import CaseInsensitiveStrEnum
 
 class WoodType(CaseInsensitiveStrEnum):
     """Enum for wood types."""
+
     SOLID_TIMBER = "solid timber"
     GLUED_LAMINATED_TIMBER = "glued laminated timber"
     LVL = "lvl"
@@ -19,6 +20,7 @@ class WoodType(CaseInsensitiveStrEnum):
 
 class JointType(CaseInsensitiveStrEnum):
     """Enum for joint types."""
+
     CONNECTION = "connection"
     PUNCHED_METAL_PLATE_FASTENERS = "punched metal plate fasteners"
 
@@ -40,6 +42,7 @@ class ServiceClass(IntEnum):
     :cvar SC3: Service class 3 is characterised by climatic conditions leading to higher moisture
                contents than in service class 2.
     """
+
     SC1 = 1
     SC2 = 2
     SC3 = 3
@@ -52,5 +55,6 @@ class CheckResult(CaseInsensitiveStrEnum):
     :cvar PASS: Design check passed.
     :cvar FAIL: Design check failed.
     """
+
     PASS = "pass"
     FAIL = "fail"

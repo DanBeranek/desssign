@@ -129,6 +129,7 @@ class LoadDurationClass(CaseInsensitiveStrEnum):
     :cvar SHORT_TERM: less than 1 week, e.g. snow, wind
     :cvar INSTANTANEOUS: instantaneous, e.g. wind, accidental load
     """
+
     PERMANENT = "permanent"
     LONG_TERM = "long-term"
     MEDIUM_TERM = "medium-term"

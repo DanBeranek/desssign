@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from framesss.pre.cases import LoadCase
 
-from desssign.loads.enums import LoadType, LoadDurationClass
+from desssign.loads.enums import LoadDurationClass
+from desssign.loads.enums import LoadType
 from desssign.loads.enums import VariableCategory
 
 

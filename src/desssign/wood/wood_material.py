@@ -4,15 +4,14 @@ from typing import TYPE_CHECKING
 
 from framesss.pre.material import Material
 
-from desssign.wood.strength_classes import WOOD_STRENGTH_CLASSES
-from desssign.wood.constants import get_partial_factor
 from desssign.wood.constants import get_modification_factor
+from desssign.wood.constants import get_partial_factor
 from desssign.wood.enums import WoodType
-
+from desssign.wood.strength_classes import WOOD_STRENGTH_CLASSES
 
 if TYPE_CHECKING:
-    from desssign.wood.enums import ServiceClass
     from desssign.loads.enums import LoadDurationClass
+    from desssign.wood.enums import ServiceClass
 
 
 class WoodMaterial(Material):
@@ -35,7 +34,9 @@ class WoodMaterial(Material):
             raise ValueError(f"Invalid strength class: {strength_class}")
 
         self.strength_class = strength_class
-        self.wood_type = WoodType.SOLID_TIMBER  # TODO: Add wood type to strength classes
+        self.wood_type = (
+            WoodType.SOLID_TIMBER
+        )  # TODO: Add wood type to strength classes
         self.service_class = service_class
 
         wood_properties = WOOD_STRENGTH_CLASSES[strength_class]
@@ -60,7 +61,7 @@ class WoodMaterial(Material):
             label=strength_class,
             elastic_modulus=self.E_m0k,
             poissons_ratio=poisson,
-            thermal_expansion_coefficient=0.5E-6,  # According to EN 1995-1-5, table C.1
+            thermal_expansion_coefficient=0.5e-6,  # According to EN 1995-1-5, table C.1
             density=self.rho_mean,
         )
 
@@ -70,9 +71,7 @@ class WoodMaterial(Material):
 
     @property
     def gamma_m(self) -> float:
-        """
-        Partial factor according to EN 1995-1-1, table 2.5.
-        """
+        """Partial factor according to EN 1995-1-1, table 2.5."""
         return get_partial_factor(self.wood_type)
 
     def get_design_value(
@@ -96,9 +95,7 @@ class WoodMaterial(Material):
 
     @property
     def beta_c(self) -> float:
-        """
-        Factor for members within the straightness limits defined in Section 10 of EN 1995-1-1.
-        """
+        """Factor for members within the straightness limits defined in Section 10 of EN 1995-1-1."""
         if self.wood_type == WoodType.SOLID_TIMBER:
             return 0.2
         elif self.wood_type == WoodType.GLUED_LAMINATED_TIMBER:

@@ -4,13 +4,15 @@ from typing import TYPE_CHECKING
 
 from framesss.pre.cases import LoadCaseCombination
 
-from desssign.loads.enums import LoadDurationClass, LOAD_DURATION_MAPPING
+from desssign.loads.enums import LOAD_DURATION_MAPPING
 from desssign.loads.enums import LimitState
+from desssign.loads.enums import LoadDurationClass
 from desssign.loads.enums import SLSCombination
-from desssign.loads.enums import ULSCombination
 from desssign.loads.enums import ULSAlternativeCombination
-from desssign.loads.load_combination_generator.generate_combinations import generate_combination
-
+from desssign.loads.enums import ULSCombination
+from desssign.loads.load_combination_generator.generate_combinations import (
+    generate_combination,
+)
 
 if TYPE_CHECKING:
     from desssign.loads.load_case import DesignLoadCase
@@ -42,9 +44,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         other_variable_cases: list[DesignLoadCase],
         alternative_combination: ULSAlternativeCombination | None = None,
     ) -> None:
-        """
-        Initialize the DesignLoadCaseCombination class.
-        """
+        """Initialize the DesignLoadCaseCombination class."""
         self.limit_state = LimitState(limit_state)
 
         if self.limit_state == LimitState.ULS:
@@ -58,8 +58,12 @@ class DesignLoadCaseCombination(LoadCaseCombination):
 
         if combination_type == ULSCombination.ALTERNATIVE:
             if alternative_combination is None:
-                raise ValueError("Alternative combination requires an alternative_combination type.")
-            self.alternative_combination = ULSAlternativeCombination(alternative_combination)
+                raise ValueError(
+                    "Alternative combination requires an alternative_combination type."
+                )
+            self.alternative_combination = ULSAlternativeCombination(
+                alternative_combination
+            )
         else:
             self.alternative_combination = None
 
@@ -99,7 +103,12 @@ class DesignLoadCaseCombination(LoadCaseCombination):
             load should be used.
         """
         # Get the minimum value of all duration classes
-        min_duration_value = min([LOAD_DURATION_MAPPING[case.load_duration_class] for case in self.load_cases])
+        min_duration_value = min(
+            [
+                LOAD_DURATION_MAPPING[case.load_duration_class]
+                for case in self.load_cases
+            ]
+        )
 
         # Find the LoadDurationClass corresponding to the minimum value
         for duration_class, value in LOAD_DURATION_MAPPING.items():

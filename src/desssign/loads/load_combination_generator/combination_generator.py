@@ -6,17 +6,14 @@ from typing import TYPE_CHECKING
 from desssign.loads.enums import LimitState
 from desssign.loads.enums import LoadType
 from desssign.loads.enums import SLSCombination
-from desssign.loads.enums import ULSCombination
 from desssign.loads.enums import ULSAlternativeCombination
+from desssign.loads.enums import ULSCombination
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
-from desssign.loads.load_combination_generator.generate_combinations import (
-    generate_combination,
-)
 from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
-    from desssign.loads.load_case_group import LoadCaseGroup
     from desssign.loads.load_case_combination import DesignLoadCaseCombination
+    from desssign.loads.load_case_group import LoadCaseGroup
 
 
 class CombinationsGenerator:
@@ -101,7 +98,7 @@ class CombinationsGenerator:
             if variable_cases:
                 for i, leading_variable_case in enumerate(variable_cases):
                     # loop through every possible combination of leading + other variable for this unique combination
-                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1:]
+                    other_variable_cases = variable_cases[:i] + variable_cases[i + 1 :]
 
                     if self.combination_type == ULSCombination.ALTERNATIVE:
                         self.combinations.append(

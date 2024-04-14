@@ -1,8 +1,8 @@
-from desssign.loads.enums import LoadType, LoadDurationClass
+from desssign.loads.enums import LoadDurationClass
+from desssign.loads.enums import LoadType
 from desssign.loads.enums import VariableCategory
-
 from desssign.loads.load_case import DesignLoadCase
-from desssign.loads.load_combination import DesignLoadCaseCombination
+from desssign.loads.load_case_combination import DesignLoadCaseCombination
 
 
 def test_load_duration_class_for_combinations() -> None:
@@ -10,50 +10,63 @@ def test_load_duration_class_for_combinations() -> None:
         label="lc1",
         load_type=LoadType.VARIABLE,
         category=VariableCategory.C,
-        load_duration_class=LoadDurationClass.MEDIUM_TERM
+        load_duration_class=LoadDurationClass.MEDIUM_TERM,
     )
 
     lc2 = DesignLoadCase(
         label="lc2",
         load_type=LoadType.PERMANENT,
-        load_duration_class=LoadDurationClass.PERMANENT
+        load_duration_class=LoadDurationClass.PERMANENT,
     )
 
     lc3 = DesignLoadCase(
         label="lc3",
-        load_type=LoadType.ACCIDENTAL,
-        load_duration_class=LoadDurationClass.INSTANTANEOUS
+        load_type=LoadType.VARIABLE,
+        category=VariableCategory.WIND,
+        load_duration_class=LoadDurationClass.INSTANTANEOUS,
     )
 
     lc4 = DesignLoadCase(
         label="lc4",
         load_type=LoadType.VARIABLE,
         category=VariableCategory.SNOW_BELLOW_1000_M,
-        load_duration_class=LoadDurationClass.SHORT_TERM
+        load_duration_class=LoadDurationClass.SHORT_TERM,
     )
 
     comb_medium = DesignLoadCaseCombination(
         label="comb",
-        load_cases={lc1: 1.0, lc2: 1.0},
-        combination_key="comb"
+        limit_state="ULS",
+        combination_type="basic",
+        permanent_cases=[lc2],
+        leading_variable_case=lc1,
+        other_variable_cases=[],
     )
 
     comb_permanent = DesignLoadCaseCombination(
         label="comb",
-        load_cases={lc2: 1.0},
-        combination_key="comb"
+        limit_state="ULS",
+        combination_type="basic",
+        permanent_cases=[lc2],
+        leading_variable_case=None,
+        other_variable_cases=[],
     )
 
     comb_short = DesignLoadCaseCombination(
         label="comb",
-        load_cases={lc1: 1.0, lc2: 1.0, lc4: 1.0},
-        combination_key="comb"
+        limit_state="ULS",
+        combination_type="basic",
+        permanent_cases=[lc2],
+        leading_variable_case=lc1,
+        other_variable_cases=[lc4],
     )
 
     comb_inst = DesignLoadCaseCombination(
         label="comb",
-        load_cases={lc1: 1.0, lc2: 1.0, lc3:1.0, lc4: 1.0},
-        combination_key="comb"
+        limit_state="ULS",
+        combination_type="basic",
+        permanent_cases=[lc2],
+        leading_variable_case=lc1,
+        other_variable_cases=[lc3, lc4],
     )
 
     assert comb_medium.load_duration_class == LoadDurationClass.MEDIUM_TERM

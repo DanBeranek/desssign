@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+
 import numpy as np
 
 from desssign.wood.enums import CheckResult
@@ -10,12 +11,15 @@ if TYPE_CHECKING:
 
 
 class Check:
+    """Abstract class for design checks."""
+
     def __init__(
         self,
         code: str,
         paragraph: str,
         equation_number: str,
     ) -> None:
+        """Init the Check object."""
         self.code = code
         self.paragraph = paragraph
         self.equation_number = equation_number
@@ -47,6 +51,7 @@ class TensionParallelToTheGrainCheck(Check):
     :param sigma_t0d: Design tensile stresses parallel to the grain along the member.
     :param f_t0d: Design tension strength parallel to the grain.
     """
+
     def __init__(
         self,
         sigma_t0d: npt.NDArray[np.float64],
@@ -72,6 +77,7 @@ class CompressionParallelToTheGrainCheck(Check):
     :param sigma_c0d: Design compressive stresses parallel to the grain along the member.
     :param f_c0d: Design compressive strength parallel to the grain.
     """
+
     def __init__(
         self,
         sigma_c0d: npt.NDArray[np.float64],
@@ -101,6 +107,7 @@ class BendingCheck(Check):
     :param k_m: Factor considering re-distribution of bending stresses
                 in cross-section.
     """
+
     def __init__(
         self,
         sigma_myd: npt.NDArray[np.float64],
@@ -117,8 +124,14 @@ class BendingCheck(Check):
         self.f_mzd = f_mzd
         self.k_m = k_m
 
-        self.eq_6_11 = np.abs(self.sigma_myd) / self.f_myd + self.k_m * np.abs(self.sigma_mzd) / self.f_mzd
-        self.eq_6_12 = self.k_m * np.abs(self.sigma_myd) / self.f_myd + np.abs(self.sigma_mzd) / self.f_mzd
+        self.eq_6_11 = (
+            np.abs(self.sigma_myd) / self.f_myd
+            + self.k_m * np.abs(self.sigma_mzd) / self.f_mzd
+        )
+        self.eq_6_12 = (
+            self.k_m * np.abs(self.sigma_myd) / self.f_myd
+            + np.abs(self.sigma_mzd) / self.f_mzd
+        )
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -135,6 +148,7 @@ class ShearCheck(Check):
     :param tau_d: Design shear stresses along the member.
     :param f_vd: Design shear strength.
     """
+
     def __init__(
         self,
         tau_d: npt.NDArray[np.float64],
@@ -161,9 +175,10 @@ class TorsionCheck(Check):
     :param f_vd: Design shear strength.
     :param k_shape: Factor depending on the shape of the cross-section.
     """
+
     def __init__(
         self,
-        t_tord:  npt.NDArray[np.float64],
+        t_tord: npt.NDArray[np.float64],
         f_vd: float,
         k_shape: float,
     ) -> None:
@@ -193,6 +208,7 @@ class CombinedBendingAndAxialTensionCheck(Check):
     :param f_mzd: Design bending strength about the principal z-axis.
     :param k_m: Factor considering re-distribution of bending stresses in cross-section.
     """
+
     def __init__(
         self,
         sigma_t0d: npt.NDArray[np.float64],
@@ -240,6 +256,7 @@ class CombinedBendingAndAxialCompressionCheck(Check):
     :param f_mzd: Design bending strength about the principal z-axis.
     :param k_m: Factor considering re-distribution of bending stresses in cross-section.
     """
+
     def __init__(
         self,
         sigma_c0d: npt.NDArray[np.float64],
@@ -289,6 +306,7 @@ class ColumnStabilityCheck(Check):
     :param k_cz: Instability factor for the z-axis.
     :param k_m: Factor considering re-distribution of bending stresses in cross-section.
     """
+
     def __init__(
         self,
         sigma_c0d: npt.NDArray[np.float64],
@@ -339,6 +357,7 @@ class BeamStabilityCheck(Check):
     :param k_crit: Factor which takes into account the reduced bending strength due to lateral buckling.
     :param k_cz: Instability factor for the z-axis.
     """
+
     def __init__(
         self,
         sigma_c0d: npt.NDArray[np.float64],

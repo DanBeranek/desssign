@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Union
 
 from desssign.loads.enums import LoadBehavior
 from desssign.loads.enums import SLSCombination
+from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
 from desssign.loads.enums import VariableCategory
-from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.load_combination_generator.constants import GAMMA_VALUES
 from desssign.loads.load_combination_generator.constants import PSI_FACTORS
 from desssign.loads.load_combination_generator.constants import XI
@@ -69,7 +68,9 @@ def generate_combination(
                 permanent_cases, leading_variable_case, other_variable_cases
             )
 
-        raise AttributeError(f"Unknown alternative combination: '{alternative_combination}'.")
+        raise AttributeError(
+            f"Unknown alternative combination: '{alternative_combination}'."
+        )
 
     raise AttributeError(f"Unknown combination: '{combination}'.")
 

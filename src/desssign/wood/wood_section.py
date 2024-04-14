@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import math
-
 from typing import TYPE_CHECKING
 
 from framesss.pre.section import RectangularSection
@@ -9,8 +8,6 @@ from framesss.pre.section import RectangularSection
 from desssign.wood.enums import WoodType
 
 if TYPE_CHECKING:
-    import numpy as np
-    import numpy.typing as npt
     from desssign.wood.wood_material import WoodMaterial
 
 
@@ -26,6 +23,7 @@ class WoodRectangularSection(RectangularSection):
     :param material: Wood material of the section.
     :ivar k_m: Factor considering re-distribution of bending stresses in cross-section.
     """
+
     def __init__(
         self,
         label: str,
@@ -62,9 +60,11 @@ class WoodRectangularSection(RectangularSection):
 
         EN 1995-1-1, 6.1.6(2)
         """
-        if (self.material.wood_type == WoodType.SOLID_TIMBER
-                or self.material.wood_type == WoodType.GLUED_LAMINATED_TIMBER
-                or self.material.wood_type == WoodType.LVL):
+        if (
+            self.material.wood_type == WoodType.SOLID_TIMBER
+            or self.material.wood_type == WoodType.GLUED_LAMINATED_TIMBER
+            or self.material.wood_type == WoodType.LVL
+        ):
             return 0.7
         else:
             return 1.0
@@ -83,10 +83,7 @@ class WoodRectangularSection(RectangularSection):
         else:
             return 1.0
 
-    def get_k_h(
-        self,
-        type_of_stress: str
-    ) -> float:
+    def get_k_h(self, type_of_stress: str) -> float:
         """
         Depth factor.
 
@@ -106,7 +103,8 @@ class WoodRectangularSection(RectangularSection):
         elif type_of_stress.lower() == "tension":
             h = max(self.height_z, self.height_y)
         else:
-            raise AttributeError(f"Invalid type of stress: '{type_of_stress}'. Use either 'bending' or 'tension'.")
+            raise AttributeError(
+                f"Invalid type of stress: '{type_of_stress}'. Use either 'bending' or 'tension'."
+            )
 
         return min((150 / h) ** 0.2, 1.3)
-

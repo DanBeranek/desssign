@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from desssign.wood.enums import WoodType
+from desssign.loads.enums import LoadDurationClass
 from desssign.wood.enums import JointType
 from desssign.wood.enums import ServiceClass
-from desssign.loads.enums import LoadDurationClass
+from desssign.wood.enums import WoodType
 
 PARTIAL_FACTORS = {
     WoodType.SOLID_TIMBER: 1.3,
