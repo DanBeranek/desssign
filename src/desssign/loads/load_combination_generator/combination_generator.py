@@ -12,8 +12,7 @@ from desssign.loads.load_case_combination import DesignLoadCaseCombination
 from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
-    from desssign.loads.load_case_combination import DesignLoadCaseCombination
-    from desssign.loads.load_case_group import LoadCaseGroup
+    from desssign.loads.load_case_group import DesignLoadCaseGroup
 
 
 class CombinationsGenerator:
@@ -54,12 +53,12 @@ class CombinationsGenerator:
 
         self.combinations: list[DesignLoadCaseCombination] = []
 
-    def generate_combinations(self, *args: list[LoadCaseGroup]) -> None:
+    def generate_combinations(self, *args: list[DesignLoadCaseGroup]) -> None:
         """
         Generate all possible combinations of load cases.
 
         :param args: Variable length argument list of LoadCaseGroup lists.
-        :type args: list[LoadCaseGroup]
+        :type args: list[DesignLoadCaseGroup]
         """
         # get all possible combinations
         all_iterables = []
@@ -172,37 +171,3 @@ class CombinationsGenerator:
                         )
                     )
                 c += 1
-
-
-if __name__ == "__main__":
-    from desssign.loads.load_case import DesignLoadCase
-    from desssign.loads.load_case_group import LoadCaseGroup
-
-    G1 = DesignLoadCase("G1", "permanent")
-    G2 = DesignLoadCase("G2", "permanent")
-    LG1 = LoadCaseGroup([G1, G2], "together")
-
-    Q1 = DesignLoadCase("Q1", "variable", "a")
-    Q2 = DesignLoadCase("Q2", "variable", "b")
-    LG2 = LoadCaseGroup([Q1, Q2], "standard")
-
-    S1 = DesignLoadCase("S1", "variable", "snow < 1000 m")
-    S2 = DesignLoadCase("S2", "variable", "snow < 1000 m")
-    S3 = DesignLoadCase("S3", "variable", "snow < 1000 m")
-    LG3 = LoadCaseGroup([S1, S2, S3], "exclusive")
-
-    W1 = DesignLoadCase("W1", "variable", "wind")
-    W2 = DesignLoadCase("W2", "variable", "wind")
-    W3 = DesignLoadCase("W3", "variable", "wind")
-    W4 = DesignLoadCase("W4", "variable", "wind")
-    LG4 = LoadCaseGroup([W1, W2, W3, W4], "exclusive")
-
-    ULS = CombinationsGenerator("ULS", "alternative")
-
-    ULS.generate_combinations([LG1, LG2], [LG1, LG3, LG4])
-
-    for comb in ULS.combinations:
-        print(comb.label)
-        print(comb.combination_key)
-
-        print("")

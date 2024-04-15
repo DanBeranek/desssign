@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 from typing import cast
 
+from framesss.pre.cases import LoadCase
 from framesss.pre.cases import LoadCaseCombination
 
 from desssign.loads.enums import LOAD_DURATION_MAPPING
@@ -11,14 +11,10 @@ from desssign.loads.enums import LoadDurationClass
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
+from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_combination_generator.generate_combinations import (
     generate_combination,
 )
-
-if TYPE_CHECKING:
-    from framesss.pre.cases import LoadCase
-
-    from desssign.loads.load_case import DesignLoadCase
 
 
 class DesignLoadCaseCombination(LoadCaseCombination):
@@ -55,7 +51,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         elif self.limit_state == LimitState.SLS:
             self.combination_type = SLSCombination(combination_type)
         else:
-            raise AttributeError(
+            raise ValueError(
                 f"Can't set combination type: '{combination_type}' to limit state: '{limit_state}'."
             )
 
@@ -118,6 +114,8 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         for duration_class, value in LOAD_DURATION_MAPPING.items():
             if value == min_duration_value:
                 return LoadDurationClass(duration_class)
+
+        # If no matching LoadDurationClass is found, raise an exception
         raise ValueError(
             f"Can't find the load duration class with value: '̈́{min_duration_value}'."
         )

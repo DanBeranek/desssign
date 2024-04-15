@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from desssign.loads.load_case import DesignLoadCase
 
 
-class LoadCaseGroup:
+class DesignLoadCaseGroup:
     """
     Class representing a group of load cases and relation between them.
 
@@ -23,7 +23,7 @@ class LoadCaseGroup:
         load_case_relation: str | LoadCaseRelation = LoadCaseRelation.STANDARD,
     ) -> None:
         """
-        Init the LoadCaseGroup class.
+        Init the DesignLoadCaseGroup class.
 
         :param load_cases: List of :class:`DesignLoadCase` instances.
         :param load_case_relation: Relation between :class:`DesignLoadCase` instances.
@@ -33,9 +33,9 @@ class LoadCaseGroup:
         self.load_case_relation = LoadCaseRelation(load_case_relation)
 
     def __repr__(self) -> str:
-        """Return a string representation of the LoadCaseGroup object."""
+        """Return a string representation of the DesignLoadCaseGroup object."""
         return (
-            f"LoadCaseGroup("
+            f"DesignLoadCaseGroup("
             f"load_cases={self.load_cases}, "
             f"load_case_relation={self.load_case_relation}"
             f")"
@@ -67,6 +67,4 @@ class LoadCaseGroup:
             comb.insert(0, [])
             return comb
         else:
-            raise AttributeError(
-                f"Invalid load case relation: {self.load_case_relation}"
-            )
+            raise ValueError(f"Invalid load case relation: {self.load_case_relation}")
