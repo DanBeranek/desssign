@@ -18,8 +18,8 @@ def flatten_list(mixed_list: tuple[Any] | list[Any]) -> list[Any]:
     """
     flat_list = []
     for item in mixed_list:
-        if isinstance(item, list):  # Check if the item is a list
-            flat_list.extend(item)  # Extend flat_list with the items of the inner list
+        if isinstance(item, (list, tuple)):  # Check if the item is a list or tuple
+            flat_list.extend(flatten_list(item))  # Recursively flatten and extend
         else:
             flat_list.append(item)  # Append the item directly if it's not a list
     return flat_list

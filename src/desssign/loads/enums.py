@@ -2,6 +2,8 @@ from framesss.enums import CaseInsensitiveStrEnum
 
 
 class LoadBehavior(CaseInsensitiveStrEnum):
+    """Enumeration of possible behavior of action."""
+
     UNFAVOURABLE = "unfavourable"
     FAVOURABLE = "favourable"
 
@@ -54,6 +56,18 @@ class ULSCombination(CaseInsensitiveStrEnum):
     ACCIDENTAL = "accidental"
 
 
+class ULSAlternativeCombination(CaseInsensitiveStrEnum):
+    """
+    Enumeration of ULS alternative combination types.
+
+    :cvar REDUCED_PERMANENT: Combination with reduced permanent load cases.
+    :cvar REDUCED_VARIABLE: Combination with reduced leading variable load case.
+    """
+
+    REDUCED_VARIABLE = "6.10a"
+    REDUCED_PERMANENT = "6.10b"
+
+
 class SLSCombination(CaseInsensitiveStrEnum):
     """
     Enumeration of serviceability limit state combinations according to EN 1990.
@@ -71,14 +85,14 @@ class SLSCombination(CaseInsensitiveStrEnum):
 class VariableCategory(CaseInsensitiveStrEnum):
     """Enumeration of possible variable loads."""
 
-    CATEGORY_A = "category a"
-    CATEGORY_B = "category b"
-    CATEGORY_C = "category c"
-    CATEGORY_D = "category d"
-    CATEGORY_E = "category e"
-    CATEGORY_F = "category f"
-    CATEGORY_G = "category g"
-    CATEGORY_H = "category h"
+    A = "a"
+    B = "b"
+    C = "c"
+    D = "d"
+    E = "e"
+    F = "f"
+    G = "g"
+    H = "h"
     SNOW_ABOVE_1000_M = "snow > 1000 m"
     SNOW_BELLOW_1000_M = "snow < 1000 m"
     WIND = "wind"
@@ -97,3 +111,36 @@ class LoadCaseRelation(CaseInsensitiveStrEnum):
     EXCLUSIVE = "exclusive"
     STANDARD = "standard"
     TOGETHER = "together"
+
+
+class LoadDurationClass(CaseInsensitiveStrEnum):
+    """
+    Enum for load duration classes.
+
+    EN 1995-1-1, 2.3.1.2 Load-duration classes.
+
+    The load-duration classes are characterised by the effect of a constant load acting for a
+    certain period of time in the life of the structure. For a variable action the appropriate class shall
+    be determined on the basis of an estimate of the typical variation of the load with time.
+
+    :cvar PERMANENT: more than 10 years, e.g. self-weight
+    :cvar LONG_TERM: 6 months - 10 years, e.g. storage
+    :cvar MEDIUM_TERM: 1 week - 6 months, e.g. imposed floor load, snow
+    :cvar SHORT_TERM: less than 1 week, e.g. snow, wind
+    :cvar INSTANTANEOUS: instantaneous, e.g. wind, accidental load
+    """
+
+    PERMANENT = "permanent"
+    LONG_TERM = "long-term"
+    MEDIUM_TERM = "medium-term"
+    SHORT_TERM = "short-term"
+    INSTANTANEOUS = "instantaneous"
+
+
+LOAD_DURATION_MAPPING = {
+    LoadDurationClass.INSTANTANEOUS: 1,
+    LoadDurationClass.SHORT_TERM: 2,
+    LoadDurationClass.MEDIUM_TERM: 3,
+    LoadDurationClass.LONG_TERM: 4,
+    LoadDurationClass.PERMANENT: 5,
+}

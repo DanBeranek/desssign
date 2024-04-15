@@ -3,42 +3,42 @@ from desssign.loads.enums import LoadType
 from desssign.loads.enums import VariableCategory
 
 PSI_FACTORS = {
-    VariableCategory.CATEGORY_A: {
+    VariableCategory.A: {
         "psi_0": 0.7,
         "psi_1": 0.5,
         "psi_2": 0.3,
     },
-    VariableCategory.CATEGORY_B: {
+    VariableCategory.B: {
         "psi_0": 0.7,
         "psi_1": 0.5,
         "psi_2": 0.3,
     },
-    VariableCategory.CATEGORY_C: {
+    VariableCategory.C: {
         "psi_0": 0.7,
         "psi_1": 0.7,
         "psi_2": 0.6,
     },
-    VariableCategory.CATEGORY_D: {
+    VariableCategory.D: {
         "psi_0": 0.7,
         "psi_1": 0.7,
         "psi_2": 0.6,
     },
-    VariableCategory.CATEGORY_E: {
+    VariableCategory.E: {
         "psi_0": 1.0,
         "psi_1": 0.9,
         "psi_2": 0.8,
     },
-    VariableCategory.CATEGORY_F: {
+    VariableCategory.F: {
         "psi_0": 0.7,
         "psi_1": 0.7,
         "psi_2": 0.6,
     },
-    VariableCategory.CATEGORY_G: {
+    VariableCategory.G: {
         "psi_0": 0.7,
         "psi_1": 0.5,
         "psi_2": 0.3,
     },
-    VariableCategory.CATEGORY_H: {
+    VariableCategory.H: {
         "psi_0": 0.0,
         "psi_1": 0.0,
         "psi_2": 0.0,
