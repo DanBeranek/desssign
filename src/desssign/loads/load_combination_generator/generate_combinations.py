@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing_extensions import TypeAlias
+from typing import TYPE_CHECKING
 
 from desssign.loads.enums import LoadBehavior
 from desssign.loads.enums import SLSCombination
@@ -12,7 +12,9 @@ from desssign.loads.load_combination_generator.constants import GAMMA_VALUES
 from desssign.loads.load_combination_generator.constants import PSI_FACTORS
 from desssign.loads.load_combination_generator.constants import XI
 
-Combination: TypeAlias = tuple[dict[DesignLoadCase, float], str]
+if TYPE_CHECKING:
+    from typing_extensions import TypeAlias
+    Combination: TypeAlias = tuple[dict[DesignLoadCase, float], str]
 
 
 def generate_combination(
