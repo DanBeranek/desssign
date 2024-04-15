@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from desssign.loads.enums import LimitState
@@ -9,9 +11,7 @@ from desssign.loads.enums import VariableCategory
 from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
 from desssign.loads.load_case_group import DesignLoadCaseGroup
-from desssign.loads.load_combination_generator.combination_generator import (
-    CombinationsGenerator,
-)
+from desssign.loads.load_combination_generator.combination_generator import CombinationsGenerator
 
 
 @pytest.fixture
@@ -146,7 +146,14 @@ def test_generate_combinations_alternative(
     assert len(combinations_generator.combinations) > 0
 
     combination_keys = []
-    combination_cases = {}
+    combination_cases: dict[
+        tuple[
+            tuple[DesignLoadCase, ...],
+            DesignLoadCase | None,
+            tuple[DesignLoadCase, ...],
+        ],
+        int,
+    ] = {}
     for combination in combinations_generator.combinations:
         assert isinstance(combination, DesignLoadCaseCombination)
         assert combination.limit_state == LimitState.ULS

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pytest
 
 from desssign.loads.enums import LimitState
@@ -45,7 +47,9 @@ def other_variable_cases() -> list[DesignLoadCase]:
 
 @pytest.fixture
 def combination(
-    permanent_cases, leading_variable_case, other_variable_cases
+    permanent_cases: list[DesignLoadCase],
+    leading_variable_case: DesignLoadCase,
+    other_variable_cases: list[DesignLoadCase],
 ) -> DesignLoadCaseCombination:
     return DesignLoadCaseCombination(
         label="comb",
@@ -58,7 +62,10 @@ def combination(
 
 
 def test_init(
-    combination, leading_variable_case, permanent_cases, other_variable_cases
+    combination: DesignLoadCaseCombination,
+    permanent_cases: list[DesignLoadCase],
+    leading_variable_case: DesignLoadCase | None,
+    other_variable_cases: list[DesignLoadCase],
 ) -> None:
     assert combination.limit_state == LimitState.ULS
     assert combination.combination_type == ULSCombination.BASIC
@@ -67,7 +74,10 @@ def test_init(
     assert combination.other_variable_cases == other_variable_cases
 
 
-def test_invalid_limit_state(permanent_cases, other_variable_cases) -> None:
+def test_invalid_limit_state(
+    permanent_cases: list[DesignLoadCase],
+    other_variable_cases: list[DesignLoadCase],
+) -> None:
     with pytest.raises(ValueError):
         DesignLoadCaseCombination(
             label="comb",
@@ -79,7 +89,10 @@ def test_invalid_limit_state(permanent_cases, other_variable_cases) -> None:
         )
 
 
-def test_invalid_alternative_combination(permanent_cases, other_variable_cases) -> None:
+def test_invalid_alternative_combination(
+    permanent_cases: list[DesignLoadCase],
+    other_variable_cases: list[DesignLoadCase],
+) -> None:
     with pytest.raises(ValueError):
         DesignLoadCaseCombination(
             label="comb",
@@ -93,7 +106,10 @@ def test_invalid_alternative_combination(permanent_cases, other_variable_cases) 
 
 
 def test_get_combination(
-    combination, leading_variable_case, permanent_cases, other_variable_cases
+    combination: DesignLoadCaseCombination,
+    permanent_cases: list[DesignLoadCase],
+    leading_variable_case: DesignLoadCase,
+    other_variable_cases: list[DesignLoadCase],
 ) -> None:
     load_cases, combination_key = combination._get_combination()
     assert load_cases[permanent_cases[0]] == pytest.approx(1.35, abs=1e-9)
