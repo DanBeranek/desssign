@@ -1,7 +1,11 @@
 import pytest
+
+from desssign.loads.enums import LoadCaseRelation
+from desssign.loads.enums import LoadDurationClass
+from desssign.loads.enums import LoadType
+from desssign.loads.enums import VariableCategory
 from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_case_group import DesignLoadCaseGroup
-from desssign.loads.enums import LoadCaseRelation, LoadType, VariableCategory, LoadDurationClass
 
 
 @pytest.fixture
@@ -12,7 +16,8 @@ def load_cases() -> list[DesignLoadCase]:
             load_type=LoadType.VARIABLE,
             category=VariableCategory.C,
             load_duration_class=LoadDurationClass.MEDIUM_TERM,
-        ) for i in range(3)
+        )
+        for i in range(3)
     ]
 
 
@@ -29,7 +34,7 @@ def test_number_of_load_cases(load_cases) -> None:
 
 def test_standard_relation(load_cases) -> None:
     load_case_group = DesignLoadCaseGroup(load_cases, LoadCaseRelation.STANDARD)
-    assert len(load_case_group.combinations) == 2**len(load_cases)
+    assert len(load_case_group.combinations) == 2 ** len(load_cases)
     assert load_case_group.combinations[0] == []
     assert load_case_group.combinations[1] == [load_cases[0]]
     assert load_case_group.combinations[2] == [load_cases[1]]

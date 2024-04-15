@@ -1,5 +1,10 @@
 import pytest
-from desssign.loads.enums import LoadType, VariableCategory, LoadDurationClass, LimitState, SLSCombination, ULSCombination, ULSAlternativeCombination
+
+from desssign.loads.enums import LimitState
+from desssign.loads.enums import LoadDurationClass
+from desssign.loads.enums import LoadType
+from desssign.loads.enums import ULSCombination
+from desssign.loads.enums import VariableCategory
 from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
 
@@ -39,7 +44,9 @@ def other_variable_cases() -> list[DesignLoadCase]:
 
 
 @pytest.fixture
-def combination(permanent_cases, leading_variable_case, other_variable_cases) -> DesignLoadCaseCombination:
+def combination(
+    permanent_cases, leading_variable_case, other_variable_cases
+) -> DesignLoadCaseCombination:
     return DesignLoadCaseCombination(
         label="comb",
         limit_state=LimitState.ULS,
@@ -50,7 +57,9 @@ def combination(permanent_cases, leading_variable_case, other_variable_cases) ->
     )
 
 
-def test_init(combination, leading_variable_case, permanent_cases, other_variable_cases) -> None:
+def test_init(
+    combination, leading_variable_case, permanent_cases, other_variable_cases
+) -> None:
     assert combination.limit_state == LimitState.ULS
     assert combination.combination_type == ULSCombination.BASIC
     assert combination.permanent_cases == permanent_cases
@@ -83,7 +92,9 @@ def test_invalid_alternative_combination(permanent_cases, other_variable_cases) 
         )
 
 
-def test_get_combination(combination, leading_variable_case, permanent_cases, other_variable_cases) -> None:
+def test_get_combination(
+    combination, leading_variable_case, permanent_cases, other_variable_cases
+) -> None:
     load_cases, combination_key = combination._get_combination()
     assert load_cases[permanent_cases[0]] == pytest.approx(1.35, abs=1e-9)
     assert load_cases[leading_variable_case] == pytest.approx(1.5, abs=1e-9)
