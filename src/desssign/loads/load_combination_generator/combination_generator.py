@@ -22,7 +22,6 @@ class CombinationsGenerator:
     :ivar limit_state: The limit state of the combination group. Either ULS or SLS.
     :ivar combination_type: The type of the combination group. For ULS: basic, alternative or accidental,
                             for SLS: characteristic, frequent or quasi-permanent.
-    :ivar combinations: A list of all generated combinations of load cases.
     """
 
     def __init__(
@@ -51,15 +50,16 @@ class CombinationsGenerator:
                 f"Can't set combination type: '{combination_type}' to limit state: '{limit_state}'."
             )
 
-        self.combinations: list[DesignLoadCaseCombination] = []
-
-    def generate_combinations(self, *args: list[DesignLoadCaseGroup]) -> None:
+    def generate_combinations(
+        self, *args: list[DesignLoadCaseGroup]
+    ) -> list[DesignLoadCaseCombination]:
         """
         Generate all possible combinations of load cases.
 
         :param args: Variable length argument list of LoadCaseGroup lists.
-        :type args: list[DesignLoadCaseGroup]
+        return:A list of all generated combinations of load cases.
         """
+        generated_combinations = []
         # get all possible combinations
         all_iterables = []
         for load_groups in args:
@@ -100,7 +100,7 @@ class CombinationsGenerator:
                     other_variable_cases = variable_cases[:i] + variable_cases[i + 1 :]
 
                     if self.combination_type == ULSCombination.ALTERNATIVE:
-                        self.combinations.append(
+                        generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c}a)",
                                 limit_state=self.limit_state,
@@ -111,7 +111,7 @@ class CombinationsGenerator:
                                 alternative_combination=ULSAlternativeCombination.REDUCED_VARIABLE,
                             )
                         )
-                        self.combinations.append(
+                        generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c}b)",
                                 limit_state=self.limit_state,
@@ -123,7 +123,7 @@ class CombinationsGenerator:
                             )
                         )
                     else:
-                        self.combinations.append(
+                        generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c})",
                                 limit_state=self.limit_state,
@@ -137,7 +137,7 @@ class CombinationsGenerator:
                     c += 1
             else:  # in case there are only permanent cases
                 if self.combination_type == ULSCombination.ALTERNATIVE:
-                    self.combinations.append(
+                    generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c}a)",
                             limit_state=self.limit_state,
@@ -148,7 +148,7 @@ class CombinationsGenerator:
                             alternative_combination=ULSAlternativeCombination.REDUCED_VARIABLE,
                         )
                     )
-                    self.combinations.append(
+                    generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c}b)",
                             limit_state=self.limit_state,
@@ -160,7 +160,7 @@ class CombinationsGenerator:
                         )
                     )
                 else:
-                    self.combinations.append(
+                    generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c})",
                             limit_state=self.limit_state,
@@ -171,3 +171,5 @@ class CombinationsGenerator:
                         )
                     )
                 c += 1
+
+        return generated_combinations

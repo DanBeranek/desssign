@@ -11,7 +11,9 @@ from desssign.loads.enums import VariableCategory
 from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
 from desssign.loads.load_case_group import DesignLoadCaseGroup
-from desssign.loads.load_combination_generator.combination_generator import CombinationsGenerator
+from desssign.loads.load_combination_generator.combination_generator import (
+    CombinationsGenerator,
+)
 
 
 @pytest.fixture
@@ -60,7 +62,6 @@ def test_init(permanent_load_case_group: DesignLoadCaseGroup) -> None:
     combinations_generator = CombinationsGenerator(LimitState.ULS, ULSCombination.BASIC)
     assert combinations_generator.limit_state == LimitState.ULS
     assert combinations_generator.combination_type == ULSCombination.BASIC
-    assert combinations_generator.combinations == []
 
 
 def test_generate_combinations_basic(
@@ -69,18 +70,18 @@ def test_generate_combinations_basic(
     wind_load_case_group: DesignLoadCaseGroup,
 ) -> None:
     combinations_generator = CombinationsGenerator(LimitState.ULS, ULSCombination.BASIC)
-    combinations_generator.generate_combinations(
+    combinations = combinations_generator.generate_combinations(
         [
             permanent_load_case_group,
             imposed_load_case_group,
             wind_load_case_group,
         ]
     )
-    assert len(combinations_generator.combinations) > 0
+    assert len(combinations) > 0
 
     combination_keys = []
     combination_cases = []
-    for combination in combinations_generator.combinations:
+    for combination in combinations:
         assert isinstance(combination, DesignLoadCaseCombination)
         assert combination.limit_state == LimitState.ULS
         assert combination.combination_type == ULSCombination.BASIC
@@ -136,14 +137,14 @@ def test_generate_combinations_alternative(
     combinations_generator = CombinationsGenerator(
         LimitState.ULS, ULSCombination.ALTERNATIVE
     )
-    combinations_generator.generate_combinations(
+    combinations = combinations_generator.generate_combinations(
         [
             permanent_load_case_group,
             imposed_load_case_group,
             wind_load_case_group,
         ]
     )
-    assert len(combinations_generator.combinations) > 0
+    assert len(combinations) > 0
 
     combination_keys = []
     combination_cases: dict[
@@ -154,7 +155,7 @@ def test_generate_combinations_alternative(
         ],
         int,
     ] = {}
-    for combination in combinations_generator.combinations:
+    for combination in combinations:
         assert isinstance(combination, DesignLoadCaseCombination)
         assert combination.limit_state == LimitState.ULS
         assert combination.combination_type == ULSCombination.ALTERNATIVE
@@ -188,13 +189,11 @@ def test_generate_combinations_alternative(
     combinations_generator_basic = CombinationsGenerator(
         LimitState.ULS, ULSCombination.BASIC
     )
-    combinations_generator_basic.generate_combinations(
+    combinations_basic = combinations_generator_basic.generate_combinations(
         [
             permanent_load_case_group,
             imposed_load_case_group,
             wind_load_case_group,
         ]
     )
-    assert len(combinations_generator.combinations) == 2 * len(
-        combinations_generator_basic.combinations
-    )
+    assert len(combinations) == 2 * len(combinations_basic)
