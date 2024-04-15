@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from desssign.loads.enums import LoadBehavior
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSAlternativeCombination
@@ -12,10 +10,6 @@ from desssign.loads.load_combination_generator.constants import GAMMA_VALUES
 from desssign.loads.load_combination_generator.constants import PSI_FACTORS
 from desssign.loads.load_combination_generator.constants import XI
 
-if TYPE_CHECKING:
-    from typing_extensions import TypeAlias
-    Combination: TypeAlias = tuple[dict[DesignLoadCase, float], str]
-
 
 def generate_combination(
     permanent_cases: list[DesignLoadCase],
@@ -23,7 +17,7 @@ def generate_combination(
     other_variable_cases: list[DesignLoadCase],
     combination: SLSCombination | ULSCombination,
     alternative_combination: ULSAlternativeCombination | None = None,
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate a combination of load cases according to the limit state and combination type.
 
@@ -77,7 +71,7 @@ def generate_sls_characteristic_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate a characteristic combination of load cases for serviceability limit state.
 
@@ -111,7 +105,7 @@ def generate_sls_frequent_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate a frequent combination of load cases for serviceability limit state.
 
@@ -146,7 +140,7 @@ def generate_sls_quasipermanent_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate a quasipermanent combination of load cases for serviceability limit state.
 
@@ -181,7 +175,7 @@ def generate_uls_basic_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate a basic combination of load cases for ultimate limit state.
 
@@ -223,7 +217,7 @@ def generate_uls_alternative_a_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate two alternative combinations of load cases for ultimate limit state.
 
@@ -266,7 +260,7 @@ def generate_uls_alternative_b_combination(
     permanent_cases: list[DesignLoadCase],
     leading_variable_case: DesignLoadCase | None,
     other_variable_cases: list[DesignLoadCase],
-) -> Combination:
+) -> tuple[dict[DesignLoadCase, float], str]:
     """
     Generate two alternative combinations of load cases for ultimate limit state.
 
