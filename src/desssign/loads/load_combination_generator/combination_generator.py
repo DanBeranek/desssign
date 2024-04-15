@@ -51,7 +51,7 @@ class CombinationsGenerator:
             )
 
     def generate_combinations(
-        self, *args: list[DesignLoadCaseGroup]
+        self, *args: list[DesignLoadCaseGroup,]
     ) -> list[DesignLoadCaseCombination]:
         """
         Generate all possible combinations of load cases.
