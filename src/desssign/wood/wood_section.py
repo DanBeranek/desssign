@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import math
 from typing import TYPE_CHECKING
+from typing import cast
+from typing import reveal_type
 
 from framesss.pre.section import RectangularSection
 
@@ -21,8 +23,9 @@ class WoodRectangularSection(RectangularSection):
     :param b: Width of the section.
     :param h: Height of the section.
     :param material: Wood material of the section.
-    :ivar k_m: Factor considering re-distribution of bending stresses in cross-section.
     """
+
+    material: WoodMaterial  # Explicit type annotation, so that mypy can check the type
 
     def __init__(
         self,
@@ -107,4 +110,7 @@ class WoodRectangularSection(RectangularSection):
                 f"Invalid type of stress: '{type_of_stress}'. Use either 'bending' or 'tension'."
             )
 
-        return min((150 / h) ** 0.2, 1.3)
+        if h <= 0:
+            raise ValueError("Height or width of the section must be greater than zero.")
+
+        return float(min((150 / h) ** 0.2, 1.3))

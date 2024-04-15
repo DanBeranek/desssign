@@ -1,17 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from framesss.pre.material import Material
 
 from desssign.wood.constants import get_modification_factor
 from desssign.wood.constants import get_partial_factor
 from desssign.wood.enums import WoodType
 from desssign.wood.strength_classes import WOOD_STRENGTH_CLASSES
-
-if TYPE_CHECKING:
-    from desssign.loads.enums import LoadDurationClass
-    from desssign.wood.enums import ServiceClass
+from desssign.wood.enums import ServiceClass
+from desssign.loads.enums import LoadDurationClass
 
 
 class WoodMaterial(Material):
@@ -27,7 +23,7 @@ class WoodMaterial(Material):
     def __init__(
         self,
         strength_class: str,
-        service_class: str | ServiceClass,
+        service_class: int | ServiceClass,
     ) -> None:
         """Init the WoodMaterial object."""
         if strength_class not in WOOD_STRENGTH_CLASSES:
@@ -37,7 +33,7 @@ class WoodMaterial(Material):
         self.wood_type = (
             WoodType.SOLID_TIMBER
         )  # TODO: Add wood type to strength classes
-        self.service_class = service_class
+        self.service_class = ServiceClass(service_class)
 
         wood_properties = WOOD_STRENGTH_CLASSES[strength_class]
 
@@ -88,6 +84,8 @@ class WoodMaterial(Material):
         :param load_duration_class: Load duration class.
         :return: Design value.
         """
+        load_duration_class = LoadDurationClass(load_duration_class)
+
         k_mod = get_modification_factor(
             self.wood_type, self.service_class, load_duration_class
         )

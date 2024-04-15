@@ -84,7 +84,7 @@ MODIFICATION_FACTORS = {
 
 def get_modification_factor(
     wood_type: str | WoodType,
-    service_class: str | ServiceClass,
+    service_class: int | ServiceClass,
     load_duration_class: str | LoadDurationClass,
 ) -> float:
     """
@@ -95,6 +95,10 @@ def get_modification_factor(
     :param load_duration_class: Load duration class.
     :return: Modification factor.
     """
+    wood_type = WoodType(wood_type)
+    service_class = ServiceClass(service_class)
+    load_duration_class = LoadDurationClass(load_duration_class)
+
     return MODIFICATION_FACTORS[wood_type][service_class][load_duration_class]
 
 
@@ -115,7 +119,7 @@ DEFORMATION_FACTORS = {
 
 def get_deformation_factor(
     wood_type: str | WoodType,
-    service_class: str | ServiceClass,
+    service_class: int | ServiceClass,
 ) -> float:
     """
     Deformation factor according to EN 1995-1-1, 3.3, table 3.2.
@@ -124,4 +128,7 @@ def get_deformation_factor(
     :param service_class: Service class.
     :return: Deformation factor.
     """
+    wood_type = WoodType(wood_type)
+    service_class = ServiceClass(service_class)
+
     return DEFORMATION_FACTORS[wood_type][service_class]

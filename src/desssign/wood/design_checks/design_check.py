@@ -38,8 +38,8 @@ class Check:
     def result(self) -> CheckResult:
         """Overall design result."""
         if self.max_usage <= 1.0:
-            return CheckResult.PASS
-        return CheckResult.FAIL
+            return CheckResult(CheckResult.PASS)
+        return CheckResult(CheckResult.FAIL)
 
 
 class TensionParallelToTheGrainCheck(Check):
@@ -233,8 +233,8 @@ class CombinedBendingAndAxialTensionCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_17 = tension + bending_y + self.k_m * bending_z
-        self.eq_6_18 = tension + self.k_m * bending_y + bending_z
+        self.eq_6_17: npt.NDArray[np.float64] = tension + bending_y + self.k_m * bending_z
+        self.eq_6_18: npt.NDArray[np.float64] = tension + self.k_m * bending_y + bending_z
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -281,8 +281,8 @@ class CombinedBendingAndAxialCompressionCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_19 = compression + bending_y + self.k_m * bending_z
-        self.eq_6_20 = compression + self.k_m * bending_y + bending_z
+        self.eq_6_19: npt.NDArray[np.float64] = compression + bending_y + self.k_m * bending_z
+        self.eq_6_20: npt.NDArray[np.float64] = compression + self.k_m * bending_y + bending_z
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -335,8 +335,8 @@ class ColumnStabilityCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_23 = compression / k_cy + bending_y + self.k_m * bending_z
-        self.eq_6_24 = compression / k_cz + self.k_m * bending_y + bending_z
+        self.eq_6_23: npt.NDArray[np.float64] = compression / k_cy + bending_y + self.k_m * bending_z
+        self.eq_6_24: npt.NDArray[np.float64] = compression / k_cz + self.k_m * bending_y + bending_z
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -379,7 +379,7 @@ class BeamStabilityCheck(Check):
         compression = np.abs(self.sigma_c0d) / (self.k_cz * self.f_c0d)
         bending = (np.abs(self.sigma_myd) / (self.k_crit * self.f_myd)) ** 2
 
-        self.eq_6_35 = compression + bending
+        self.eq_6_35: npt.NDArray[np.float64] = compression + bending
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:

@@ -22,7 +22,7 @@ class DesignLoadCase(LoadCase):
         label: str,
         load_type: str | LoadType,
         category: str | VariableCategory | None = None,
-        load_duration_class: str | LoadDurationClass | None = None,
+        load_duration_class: str | LoadDurationClass = LoadDurationClass.PERMANENT,
     ) -> None:
         """Init the DesignLoadCase class."""
         super().__init__(label)
@@ -33,7 +33,7 @@ class DesignLoadCase(LoadCase):
         else:
             self.category = None
 
-        self.load_duration_class = load_duration_class
+        self.load_duration_class = LoadDurationClass(load_duration_class)
 
     def __repr__(self) -> str:
         """Return a string representation of the DesignLoadCase object."""

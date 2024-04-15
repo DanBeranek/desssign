@@ -73,29 +73,29 @@ def test_example_IV_1() -> None:
     )
     member_63 = model.add_member("6-3", "navier", [node_6, node_3], section)
 
-    lc1 = model.add_load_case("LC1", "variable", "a", "short-term")
+    lc1 = model.add_design_load_case("LC1", "variable", "a", "short-term")
     node_1.add_prescribed_displacement(-0.003, "x", lc1)
 
-    lc2 = model.add_load_case("LC2", "permanent", load_duration_class="permanent")
+    lc2 = model.add_design_load_case("LC2", "permanent", load_duration_class="permanent")
     node_3.add_prescribed_displacement(-0.003, "x", lc2)
 
-    lc3 = model.add_load_case("LC3", "variable", "wind", "instantaneous")
+    lc3 = model.add_design_load_case("LC3", "variable", "wind", "instantaneous")
     member_14.add_distributed_load(
         np.array([0, 0, 25, 0, 0, 25]) * 1e3, lc3, location="projection"
     )
 
-    lc4 = model.add_load_case("LC4", "permanent", load_duration_class="permanent")
+    lc4 = model.add_design_load_case("LC4", "permanent", load_duration_class="permanent")
     member_45.add_distributed_load(np.array([0, 0, 25, 0, 0, 25]) * 1e3, lc4)
 
-    lc5 = model.add_load_case("LC5", "permanent", load_duration_class="permanent")
+    lc5 = model.add_design_load_case("LC5", "permanent", load_duration_class="permanent")
     member_56.add_distributed_load(np.array([0, 0, -25, 0, 0, -25]) * 1e3, lc5)
 
-    lc6 = model.add_load_case("LC6", "permanent", load_duration_class="permanent")
+    lc6 = model.add_design_load_case("LC6", "permanent", load_duration_class="permanent")
     member_63.add_distributed_load(
         np.array([0, 0, -25, 0, 0, -25]) * 1e3, lc6, location="projection"
     )
 
-    comb = model.add_load_case_combination(
+    comb = model.add_design_load_case_combination(
         label="CO1",
         limit_state="ULS",
         combination_type="basic",

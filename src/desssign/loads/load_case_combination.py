@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from typing import cast
+from typing import Dict
 
 from framesss.pre.cases import LoadCaseCombination
 
@@ -15,6 +17,7 @@ from desssign.loads.load_combination_generator.generate_combinations import (
 )
 
 if TYPE_CHECKING:
+    from framesss.pre.cases import LoadCase
     from desssign.loads.load_case import DesignLoadCase
 
 
@@ -33,7 +36,6 @@ class DesignLoadCaseCombination(LoadCaseCombination):
                                     Either '6.10a' or '6.10b'.
     :ivar combination_key: The key of the combination.
     """
-
     def __init__(
         self,
         label: str,
@@ -42,7 +44,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         permanent_cases: list[DesignLoadCase],
         leading_variable_case: DesignLoadCase | None,
         other_variable_cases: list[DesignLoadCase],
-        alternative_combination: ULSAlternativeCombination | None = None,
+        alternative_combination: str | ULSAlternativeCombination | None = None,
     ) -> None:
         """Initialize the DesignLoadCaseCombination class."""
         self.limit_state = LimitState(limit_state)
@@ -59,13 +61,11 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         if combination_type == ULSCombination.ALTERNATIVE:
             if alternative_combination is None:
                 raise ValueError(
-                    "Alternative combination requires an alternative_combination type."
+                    "Alternative combination requires an 'alternative_combination'."
                 )
-            self.alternative_combination = ULSAlternativeCombination(
-                alternative_combination
-            )
-        else:
-            self.alternative_combination = None
+
+        self.alternative_combination = ULSAlternativeCombination(
+            alternative_combination) if alternative_combination else None
 
         self.permanent_cases = permanent_cases
         self.leading_variable_case = leading_variable_case
@@ -79,7 +79,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
             alternative_combination=self.alternative_combination,
         )
 
-        super().__init__(label, load_cases)  # type: ignore[arg-type]
+        super().__init__(label, cast(Dict[LoadCase, float], load_cases))
 
     def _get_combination(self) -> tuple[dict[DesignLoadCase, float], str]:
         """Return the load cases combination and the combination key."""
@@ -105,7 +105,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         # Get the minimum value of all duration classes
         min_duration_value = min(
             [
-                LOAD_DURATION_MAPPING[case.load_duration_class]
+                LOAD_DURATION_MAPPING[cast(DesignLoadCase, case).load_duration_class]
                 for case in self.load_cases
             ]
         )
@@ -113,4 +113,5 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         # Find the LoadDurationClass corresponding to the minimum value
         for duration_class, value in LOAD_DURATION_MAPPING.items():
             if value == min_duration_value:
-                return duration_class
+                return LoadDurationClass(duration_class)
+        raise ValueError(f"Can't find the load duration class with value: '̈́{min_duration_value}'.")

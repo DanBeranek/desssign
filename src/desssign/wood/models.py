@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
+from typing import cast
+from typing import Set
 
 from framesss.enums import BeamConnection
 from framesss.enums import Element1DType
@@ -33,12 +35,11 @@ class WoodModel(Model):
 
     :param analysis: The analysis object.
     """
-
     def __init__(self, analysis: Analysis) -> None:
         """Init the WoodModel object."""
         super().__init__(analysis)
 
-    def add_member(
+    def add__wood_member(
         self,
         label: str,
         element_type: str,
@@ -72,12 +73,12 @@ class WoodModel(Model):
         self.members.add(new_member)
         return new_member
 
-    def add_load_case(
+    def add_design_load_case(
         self,
         label: str,
         load_type: str | LoadType = LoadType.PERMANENT,
         category: str | VariableCategory | None = None,
-        load_duration_class: str | LoadDurationClass | None = None,
+        load_duration_class: str | LoadDurationClass = LoadDurationClass.PERMANENT,
     ) -> DesignLoadCase:
         """
         Add and return new :class:`DesignLoadCase` instance.
@@ -95,29 +96,22 @@ class WoodModel(Model):
             else None
         )
         if load_type == LoadType.VARIABLE and category is None:
-            raise ValueError(
-                "Variable load cases require a category.\n"
-                f"Available categories: {[vc.value for vc in VariableCategory]}"
-            )
+            raise ValueError("Variable load cases require a category.")
         if load_duration_class is None:
-            raise ValueError(
-                "Load duration class must be provided.\n"
-                f"Available classes: {[ldc.value for ldc in LoadDurationClass]}"
-            )
+            raise ValueError("Load duration class must be provided.")
 
         new_case = DesignLoadCase(label, load_type, category, load_duration_class)
         self.load_cases.add(new_case)
         return new_case
 
-    def add_load_case_combination(
+    def add_design_load_case_combination(
         self,
         label: str,
-        limit_state: str | LimitState | None = None,
-        combination_type: str | SLSCombination | ULSCombination | None = None,
-        permanent_cases: list[DesignLoadCase] | None = None,
-        leading_variable_case: DesignLoadCase | None = None,
-        other_variable_cases: list[DesignLoadCase] | None = None,
-        **kwargs: list[DesignLoadCase],
+        limit_state: str | LimitState,
+        combination_type: str | SLSCombination | ULSCombination,
+        permanent_cases: list[DesignLoadCase],
+        leading_variable_case: DesignLoadCase | None,
+        other_variable_cases: list[DesignLoadCase],
     ) -> (
         DesignLoadCaseCombination
         | tuple[DesignLoadCaseCombination, DesignLoadCaseCombination]
@@ -173,11 +167,11 @@ class WoodModel(Model):
         """Perform ULS checks on the model members."""
         combinations = [
             comb
-            for comb in self.load_combinations
+            for comb in cast(Set[DesignLoadCaseCombination], self.load_combinations)
             if comb.limit_state == LimitState.ULS
         ]
 
-        for member in self.members:
+        for member in cast(Set[WoodMember1D], self.members):
             member.perform_uls_checks(combinations)
 
 

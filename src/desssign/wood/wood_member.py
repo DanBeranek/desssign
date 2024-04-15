@@ -36,6 +36,8 @@ class WoodMember1D(Member1D):
     :param analysis: The :class:`Analysis` object.
     """
 
+    section: WoodRectangularSection  # Explicit type annotation, so that mypy can check the type
+
     def __init__(
         self,
         label: str,
@@ -66,13 +68,13 @@ class WoodMember1D(Member1D):
     def L_cr_y(self) -> float:
         """Critical length for buckling in y-axis."""
         # TODO: Implement the critical length for buckling in y-axis
-        return self.length
+        return float(self.length)
 
     @property
     def L_cr_z(self) -> float:
         """Critical length for buckling in z-axis."""
         # TODO: Implement the critical length for buckling in z-axis
-        return self.length
+        return float(self.length)
 
     @property
     def lambda_y(self) -> float:
@@ -158,7 +160,7 @@ class WoodMember1D(Member1D):
         EN 1995-1-1, 6.3.3(3), Table 6.1
         """
         # TODO: Implement the effective length of the member subjected to bending
-        return 0.9 * self.length + 2 * self.section.height_z
+        return float(0.9 * self.length + 2 * self.section.height_z)
 
     @property
     def sigma_m_crit(self) -> float:
