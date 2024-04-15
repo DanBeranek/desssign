@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Set
 from typing import cast
 
 from framesss.enums import BeamConnection
@@ -168,11 +167,11 @@ class WoodModel(Model):
         """Perform ULS checks on the model members."""
         combinations = [
             comb
-            for comb in cast(Set[DesignLoadCaseCombination], self.load_combinations)
+            for comb in cast(set[DesignLoadCaseCombination], self.load_combinations)
             if comb.limit_state == LimitState.ULS
         ]
 
-        for member in cast(Set[WoodMember1D], self.members):
+        for member in cast(set[WoodMember1D], self.members):
             member.perform_uls_checks(combinations)
 
 

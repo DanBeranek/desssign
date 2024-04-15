@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import Dict
 from typing import cast
 
 from framesss.pre.cases import LoadCaseCombination
@@ -84,7 +83,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
             alternative_combination=self.alternative_combination,
         )
 
-        super().__init__(label, cast(Dict[LoadCase, float], load_cases))
+        super().__init__(label, cast(dict[LoadCase, float], load_cases))
 
     def _get_combination(self) -> tuple[dict[DesignLoadCase, float], str]:
         """Return the load cases combination and the combination key."""
