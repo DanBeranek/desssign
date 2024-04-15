@@ -233,8 +233,12 @@ class CombinedBendingAndAxialTensionCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_17: npt.NDArray[np.float64] = tension + bending_y + self.k_m * bending_z
-        self.eq_6_18: npt.NDArray[np.float64] = tension + self.k_m * bending_y + bending_z
+        self.eq_6_17: npt.NDArray[np.float64] = (
+            tension + bending_y + self.k_m * bending_z
+        )
+        self.eq_6_18: npt.NDArray[np.float64] = (
+            tension + self.k_m * bending_y + bending_z
+        )
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -281,8 +285,12 @@ class CombinedBendingAndAxialCompressionCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_19: npt.NDArray[np.float64] = compression + bending_y + self.k_m * bending_z
-        self.eq_6_20: npt.NDArray[np.float64] = compression + self.k_m * bending_y + bending_z
+        self.eq_6_19: npt.NDArray[np.float64] = (
+            compression + bending_y + self.k_m * bending_z
+        )
+        self.eq_6_20: npt.NDArray[np.float64] = (
+            compression + self.k_m * bending_y + bending_z
+        )
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
@@ -335,8 +343,12 @@ class ColumnStabilityCheck(Check):
         bending_y = np.abs(self.sigma_myd) / self.f_myd
         bending_z = np.abs(self.sigma_mzd) / self.f_mzd
 
-        self.eq_6_23: npt.NDArray[np.float64] = compression / k_cy + bending_y + self.k_m * bending_z
-        self.eq_6_24: npt.NDArray[np.float64] = compression / k_cz + self.k_m * bending_y + bending_z
+        self.eq_6_23: npt.NDArray[np.float64] = (
+            compression / k_cy + bending_y + self.k_m * bending_z
+        )
+        self.eq_6_24: npt.NDArray[np.float64] = (
+            compression / k_cz + self.k_m * bending_y + bending_z
+        )
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:

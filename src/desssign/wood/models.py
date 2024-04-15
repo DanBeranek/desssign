@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import cast
 from typing import Set
+from typing import cast
 
 from framesss.enums import BeamConnection
 from framesss.enums import Element1DType
@@ -35,6 +35,7 @@ class WoodModel(Model):
 
     :param analysis: The analysis object.
     """
+
     def __init__(self, analysis: Analysis) -> None:
         """Init the WoodModel object."""
         super().__init__(analysis)

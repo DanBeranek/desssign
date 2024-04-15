@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import math
 from typing import TYPE_CHECKING
-from typing import cast
-from typing import reveal_type
 
 from framesss.pre.section import RectangularSection
 
@@ -111,6 +109,8 @@ class WoodRectangularSection(RectangularSection):
             )
 
         if h <= 0:
-            raise ValueError("Height or width of the section must be greater than zero.")
+            raise ValueError(
+                "Height or width of the section must be greater than zero."
+            )
 
         return float(min((150 / h) ** 0.2, 1.3))

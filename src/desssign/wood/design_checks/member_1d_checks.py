@@ -15,6 +15,7 @@ from desssign.wood.enums import CheckResult
 
 if TYPE_CHECKING:
     import numpy.typing as npt
+
     from desssign.loads.load_case_combination import DesignLoadCaseCombination
     from desssign.wood.wood_member import WoodMember1D
 
@@ -79,11 +80,20 @@ class Member1DChecks:
         self.perform_tension_with_bending_checks(load_case_combinations)
         self.perform_compression_with_bending_checks(load_case_combinations)
 
-    def get_internal_forces(self, combination: DesignLoadCaseCombination) -> tuple[npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64], npt.NDArray[np.float64]]:
+    def get_internal_forces(self, combination: DesignLoadCaseCombination) -> tuple[
+        npt.NDArray[np.float64],
+        npt.NDArray[np.float64],
+        npt.NDArray[np.float64],
+        npt.NDArray[np.float64],
+        npt.NDArray[np.float64],
+        npt.NDArray[np.float64],
+    ]:
         """Get the internal forces for a given load case combination."""
         # Determine the default array sizes from the member dimensions
         default_length = self.member.x_local.shape[0]
-        default_peak_length = self.member.results.peak_x_local.get(combination, np.zeros(0)).shape[0]
+        default_peak_length = self.member.results.peak_x_local.get(
+            combination, np.zeros(0)
+        ).shape[0]
 
         # Safe retrieval of internal forces using the .get method with default zero arrays
         axial = self.member.results.axial_forces.get(

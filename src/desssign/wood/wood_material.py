@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from framesss.pre.material import Material
 
+from desssign.loads.enums import LoadDurationClass
 from desssign.wood.constants import get_modification_factor
 from desssign.wood.constants import get_partial_factor
+from desssign.wood.enums import ServiceClass
 from desssign.wood.enums import WoodType
 from desssign.wood.strength_classes import WOOD_STRENGTH_CLASSES
-from desssign.wood.enums import ServiceClass
-from desssign.loads.enums import LoadDurationClass
 
 
 class WoodMaterial(Material):

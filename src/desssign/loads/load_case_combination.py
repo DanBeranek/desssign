@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import cast
 from typing import Dict
+from typing import cast
 
 from framesss.pre.cases import LoadCaseCombination
 
@@ -18,6 +18,7 @@ from desssign.loads.load_combination_generator.generate_combinations import (
 
 if TYPE_CHECKING:
     from framesss.pre.cases import LoadCase
+
     from desssign.loads.load_case import DesignLoadCase
 
 
@@ -36,6 +37,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
                                     Either '6.10a' or '6.10b'.
     :ivar combination_key: The key of the combination.
     """
+
     def __init__(
         self,
         label: str,
@@ -64,8 +66,11 @@ class DesignLoadCaseCombination(LoadCaseCombination):
                     "Alternative combination requires an 'alternative_combination'."
                 )
 
-        self.alternative_combination = ULSAlternativeCombination(
-            alternative_combination) if alternative_combination else None
+        self.alternative_combination = (
+            ULSAlternativeCombination(alternative_combination)
+            if alternative_combination
+            else None
+        )
 
         self.permanent_cases = permanent_cases
         self.leading_variable_case = leading_variable_case
@@ -114,4 +119,6 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         for duration_class, value in LOAD_DURATION_MAPPING.items():
             if value == min_duration_value:
                 return LoadDurationClass(duration_class)
-        raise ValueError(f"Can't find the load duration class with value: '̈́{min_duration_value}'.")
+        raise ValueError(
+            f"Can't find the load duration class with value: '̈́{min_duration_value}'."
+        )
