@@ -1,3 +1,4 @@
+# mypy: disable-error-code="assignment"
 """
 Tests for the Eurocode 5 examples.
 
@@ -64,7 +65,7 @@ def test_example_IV_1() -> None:
     member_45 = model.add_member(
         "4-5", "navier", [node_4, node_5], section, hinges=["fixed", "hinged"]
     )
-    member_25 = model.add_member(
+    model.add_member(
         "2-5", "navier", [node_2, node_5], section, hinges=["fixed", "hinged"]
     )
     member_56 = model.add_member(
@@ -108,4 +109,5 @@ def test_example_IV_1() -> None:
 
     model.perform_uls_checks()
 
+    print(comb)
     print("")

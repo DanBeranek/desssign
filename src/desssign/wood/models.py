@@ -112,11 +112,11 @@ class WoodModel(Model):
     def add_load_case_combination(
         self,
         label: str,
-        limit_state: str | LimitState = None,
-        combination_type: str | SLSCombination | ULSCombination = None,
-        permanent_cases: list[DesignLoadCase] = None,
+        limit_state: str | LimitState | None = None,
+        combination_type: str | SLSCombination | ULSCombination | None = None,
+        permanent_cases: list[DesignLoadCase] | None = None,
         leading_variable_case: DesignLoadCase | None = None,
-        other_variable_cases: list[DesignLoadCase] = None,
+        other_variable_cases: list[DesignLoadCase] | None = None,
         **kwargs: list[DesignLoadCase],
     ) -> (
         DesignLoadCaseCombination
