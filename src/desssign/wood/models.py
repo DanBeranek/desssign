@@ -39,7 +39,7 @@ class WoodModel(Model):
         """Init the WoodModel object."""
         super().__init__(analysis)
 
-    def add__wood_member(
+    def add_wood_member(
         self,
         label: str,
         element_type: str,
@@ -76,6 +76,7 @@ class WoodModel(Model):
     def add_design_load_case(
         self,
         label: str,
+        description: str = "",
         load_type: str | LoadType = LoadType.PERMANENT,
         category: str | VariableCategory | None = None,
         load_duration_class: str | LoadDurationClass = LoadDurationClass.PERMANENT,
@@ -84,6 +85,7 @@ class WoodModel(Model):
         Add and return new :class:`DesignLoadCase` instance.
 
         :param label: Unique user-defined label of the load case.
+        :param description: A description of the load case.
         :param load_type: The type of the load case. Either 'permanent', 'variable' or 'accidental'.
         :param category: The category of the variable load case. Only required for variable load cases.
         :param load_duration_class: The load duration class of the load case.
@@ -100,7 +102,7 @@ class WoodModel(Model):
         if load_duration_class is None:
             raise ValueError("Load duration class must be provided.")
 
-        new_case = DesignLoadCase(label, load_type, category, load_duration_class)
+        new_case = DesignLoadCase(label, load_type, category, load_duration_class, description)
         self.load_cases.add(new_case)
         return new_case
 
