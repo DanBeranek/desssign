@@ -15,6 +15,7 @@ class DesignLoadCase(LoadCase):
     :param load_type: The type of the load case. Either permanent, variable or accidental.
     :param category: The category of the variable load case. Only required for variable load cases.
     :param load_duration_class: The load duration class of the load case.
+    :param description: A description of the load case.
     """
 
     def __init__(
@@ -23,6 +24,7 @@ class DesignLoadCase(LoadCase):
         load_type: str | LoadType,
         category: str | VariableCategory | None = None,
         load_duration_class: str | LoadDurationClass = LoadDurationClass.PERMANENT,
+        description: str = "",
     ) -> None:
         """Init the DesignLoadCase class."""
         super().__init__(label)
@@ -34,6 +36,8 @@ class DesignLoadCase(LoadCase):
             self.category = None
 
         self.load_duration_class = LoadDurationClass(load_duration_class)
+
+        self.description = description
 
     def __repr__(self) -> str:
         """Return a string representation of the DesignLoadCase object."""
