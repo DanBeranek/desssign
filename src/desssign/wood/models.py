@@ -39,7 +39,7 @@ class WoodModel(Model):
         """Init the WoodModel object."""
         super().__init__(analysis)
 
-    def add__wood_member(
+    def add_wood_member(
         self,
         label: str,
         element_type: str,
