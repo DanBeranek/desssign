@@ -30,6 +30,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
     :param other_variable_cases: A list of other variable load cases.
     :param alternative_combination: Specifier for the used equation, only required for ULS alternative combinations.
                                     Either '6.10a' or '6.10b'.
+    :param description: A description of the load case combination.
     :ivar combination_key: The key of the combination.
     """
 
@@ -41,6 +42,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
         permanent_cases: list[DesignLoadCase],
         leading_variable_case: DesignLoadCase | None,
         other_variable_cases: list[DesignLoadCase],
+        description: str = "",
         alternative_combination: str | ULSAlternativeCombination | None = None,
     ) -> None:
         """Initialize the DesignLoadCaseCombination class."""
@@ -78,6 +80,8 @@ class DesignLoadCaseCombination(LoadCaseCombination):
             combination=self.combination_type,
             alternative_combination=self.alternative_combination,
         )
+
+        self.description = description
 
         super().__init__(label, cast(dict[LoadCase, float], load_cases))
 
