@@ -106,7 +106,7 @@ class CombinationsGenerator:
                     if self.combination_type == ULSCombination.ALTERNATIVE:
                         generated_combinations.append(
                             DesignLoadCaseCombination(
-                                label=f"{label}({c}a)",
+                                label=f"{label}{c}a",
                                 description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
@@ -118,7 +118,7 @@ class CombinationsGenerator:
                         )
                         generated_combinations.append(
                             DesignLoadCaseCombination(
-                                label=f"{label}({c}b)",
+                                label=f"{label}{c}b",
                                 description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
@@ -131,7 +131,7 @@ class CombinationsGenerator:
                     else:
                         generated_combinations.append(
                             DesignLoadCaseCombination(
-                                label=f"{label}({c})",
+                                label=f"{label}{c}",
                                 description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
@@ -146,7 +146,7 @@ class CombinationsGenerator:
                 if self.combination_type == ULSCombination.ALTERNATIVE:
                     generated_combinations.append(
                         DesignLoadCaseCombination(
-                            label=f"{label}({c}a)",
+                            label=f"{label}{c}a",
                             description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
@@ -158,7 +158,7 @@ class CombinationsGenerator:
                     )
                     generated_combinations.append(
                         DesignLoadCaseCombination(
-                            label=f"{label}({c}b)",
+                            label=f"{label}{c}b",
                             description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
@@ -171,7 +171,7 @@ class CombinationsGenerator:
                 else:
                     generated_combinations.append(
                         DesignLoadCaseCombination(
-                            label=f"{label}({c})",
+                            label=f"{label}{c}",
                             description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
