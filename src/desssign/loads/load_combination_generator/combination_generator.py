@@ -51,11 +51,14 @@ class CombinationsGenerator:
             )
 
     def generate_combinations(
-        self, *args: list[DesignLoadCaseGroup,]
+        self,
+        *args: list[DesignLoadCaseGroup,],
+        start_numbering_from: int = 1,
     ) -> list[DesignLoadCaseCombination]:
         """
         Generate all possible combinations of load cases.
 
+        :param start_numbering_from: The number to start the combination numbering from.
         :param args: Variable length argument list of LoadCaseGroup lists.
         return:A list of all generated combinations of load cases.
         """
@@ -79,9 +82,10 @@ class CombinationsGenerator:
             if combination not in unique_combinations:
                 unique_combinations.append(combination)
 
-        label = f"{self.limit_state.value.upper()}-{self.combination_type.value}"
+        label = "CO"
+        description = f"{self.limit_state.value.upper()}-{self.combination_type.value}"
 
-        c = 1
+        c = start_numbering_from
         for unique_combination in unique_combinations:
             permanent_cases = [
                 case
@@ -103,6 +107,7 @@ class CombinationsGenerator:
                         generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c}a)",
+                                description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
                                 permanent_cases=permanent_cases,
@@ -114,6 +119,7 @@ class CombinationsGenerator:
                         generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c}b)",
+                                description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
                                 permanent_cases=permanent_cases,
@@ -126,6 +132,7 @@ class CombinationsGenerator:
                         generated_combinations.append(
                             DesignLoadCaseCombination(
                                 label=f"{label}({c})",
+                                description=description,
                                 limit_state=self.limit_state,
                                 combination_type=self.combination_type,
                                 permanent_cases=permanent_cases,
@@ -140,6 +147,7 @@ class CombinationsGenerator:
                     generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c}a)",
+                            description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
                             permanent_cases=permanent_cases,
@@ -151,6 +159,7 @@ class CombinationsGenerator:
                     generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c}b)",
+                            description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
                             permanent_cases=permanent_cases,
@@ -163,6 +172,7 @@ class CombinationsGenerator:
                     generated_combinations.append(
                         DesignLoadCaseCombination(
                             label=f"{label}({c})",
+                            description=description,
                             limit_state=self.limit_state,
                             combination_type=self.combination_type,
                             permanent_cases=permanent_cases,

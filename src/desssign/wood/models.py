@@ -102,7 +102,9 @@ class WoodModel(Model):
         if load_duration_class is None:
             raise ValueError("Load duration class must be provided.")
 
-        new_case = DesignLoadCase(label, load_type, category, load_duration_class, description)
+        new_case = DesignLoadCase(
+            label, load_type, category, load_duration_class, description
+        )
         self.load_cases.add(new_case)
         return new_case
 
