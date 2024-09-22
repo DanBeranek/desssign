@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-from typing import cast
 
 from framesss.enums import BeamConnection
 from framesss.enums import Element1DType
@@ -17,26 +16,31 @@ from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
 from desssign.loads.enums import VariableCategory
 from desssign.loads.load_case import DesignLoadCase
+from desssign.loads.load_case_combination import DesignNonlinearLoadCaseCombination
 from desssign.loads.load_case_combination import DesignLoadCaseCombination
+
 from desssign.wood.wood_member import WoodMember1D
+from desssign.concrete.concrete_member import ConcreteMember1D
 
 if TYPE_CHECKING:
     from framesss.fea.node import Node
 
     from desssign.wood.wood_section import WoodRectangularSection
+    from desssign.concrete.concrete_section import ConcreteSection
 
 
-class WoodModel(Model):
+class DesignModel(Model):
     """
     Class represent the entire structural analysis model.
 
-    Upon :class:`framesss.fea.models.Model` class, it changes specific methods for creating wood members.
-
-    :param analysis: The analysis object.
+    Upon :class:`framesss.fea.models.Model` class, it changes
     """
+    load_combinations: set[DesignLoadCaseCombination]
+    nonlinear_load_combinations: set[DesignNonlinearLoadCaseCombination]
+    members: set[WoodMember1D | ConcreteMember1D]
 
     def __init__(self, analysis: Analysis) -> None:
-        """Init the WoodModel object."""
+        """Init the DesignModel object."""
         super().__init__(analysis)
 
     def add_wood_member(
@@ -62,6 +66,40 @@ class WoodModel(Model):
 
         aux = self.analysis.get_auxiliary_vector_in_local_xy_plane(nodes)
         new_member = WoodMember1D(
+            label,
+            elem_type,
+            nodes,
+            section,
+            hngs,
+            aux,
+            self.analysis,
+        )
+        self.members.add(new_member)
+        return new_member
+
+    def add_concrete_member(
+        self,
+        label: str,
+        element_type: str,
+        nodes: list[Node],
+        section: ConcreteSection,
+        hinges: list[str] | tuple[str, str] = (BeamConnection.CONTINUOUS_END,) * 2,
+    ) -> ConcreteMember1D:
+        """
+        Create and return new :class:`ConcreteMember1D` instance.
+
+        :param label: A user-defined label for the member.
+        :param element_type: Specifies the type of the element ('navier', 'timoshenko').
+        :param nodes: A list of nodes at the start and the end of the member.
+        :param section: The cross-section of the member.
+        :param hinges: Defines the type of connections at the start and the end of the  member
+                       (e.g., fixed, hinged, or semirigid) to model the rotational stiffness accurately.
+        """
+        elem_type = Element1DType(element_type)
+        hngs = [BeamConnection(hng) for hng in hinges]
+
+        aux = self.analysis.get_auxiliary_vector_in_local_xy_plane(nodes)
+        new_member = ConcreteMember1D(
             label,
             elem_type,
             nodes,
@@ -116,9 +154,12 @@ class WoodModel(Model):
         permanent_cases: list[DesignLoadCase],
         leading_variable_case: DesignLoadCase | None,
         other_variable_cases: list[DesignLoadCase],
+        is_nonlinear: bool = False,
     ) -> (
-        DesignLoadCaseCombination
-        | tuple[DesignLoadCaseCombination, DesignLoadCaseCombination]
+        DesignLoadCaseCombination |
+        DesignNonlinearLoadCaseCombination |
+        tuple[DesignLoadCaseCombination, DesignLoadCaseCombination] |
+        tuple[DesignNonlinearLoadCaseCombination, DesignNonlinearLoadCaseCombination]
     ):
         """
         Add and return new :class:`LoadCaseCombination` instance.
@@ -130,9 +171,11 @@ class WoodModel(Model):
         :param permanent_cases: A list of permanent load cases.
         :param leading_variable_case: The leading variable load case.
         :param other_variable_cases: A list of other variable load cases.
+        :param is_nonlinear: Flag if the combination is nonlinear.
         """
+        CombinationClass = DesignNonlinearLoadCaseCombination if is_nonlinear else DesignLoadCaseCombination
         if combination_type == ULSCombination.ALTERNATIVE:
-            new_combination_a = DesignLoadCaseCombination(
+            new_combination_a = CombinationClass(
                 label=f"{label}(a)",
                 limit_state=limit_state,
                 combination_type=combination_type,
@@ -142,7 +185,7 @@ class WoodModel(Model):
                 alternative_combination=ULSAlternativeCombination.REDUCED_VARIABLE,
             )
 
-            new_combination_b = DesignLoadCaseCombination(
+            new_combination_b = CombinationClass(
                 label=f"{label}(b)",
                 limit_state=limit_state,
                 combination_type=combination_type,
@@ -152,11 +195,15 @@ class WoodModel(Model):
                 alternative_combination=ULSAlternativeCombination.REDUCED_PERMANENT,
             )
 
-            self.load_combinations.add(new_combination_a)
-            self.load_combinations.add(new_combination_b)
+            if is_nonlinear:
+                self.nonlinear_load_combinations.add(new_combination_a)
+                self.nonlinear_load_combinations.add(new_combination_b)
+            else:
+                self.load_combinations.add(new_combination_a)
+                self.load_combinations.add(new_combination_b)
             return new_combination_a, new_combination_b
 
-        new_combination = DesignLoadCaseCombination(
+        new_combination = CombinationClass(
             label=label,
             limit_state=limit_state,
             combination_type=combination_type,
@@ -164,24 +211,30 @@ class WoodModel(Model):
             leading_variable_case=leading_variable_case,
             other_variable_cases=other_variable_cases,
         )
-        self.load_combinations.add(new_combination)
+        if is_nonlinear:
+            self.nonlinear_load_combinations.add(new_combination)
+        else:
+            self.load_combinations.add(new_combination)
         return new_combination
 
     def perform_uls_checks(self) -> None:
         """Perform ULS checks on the model members."""
         combinations = [
             comb
-            for comb in cast(set[DesignLoadCaseCombination], self.load_combinations)
-            if comb.limit_state == LimitState.ULS
+            for comb in self.load_combinations.union(
+                self.nonlinear_load_combinations
+            ) if comb.limit_state == LimitState.ULS
         ]
 
-        for member in cast(set[WoodMember1D], self.members):
+        for member in self.members:
             member.perform_uls_checks(combinations)
 
 
-class WoodModelFrameXZ(WoodModel):
-    """Subclass of the :class:`WoodModel` class for the implementation of the 2D Frame model in XZ-plane."""
+class DesignModelFrameXZ(DesignModel):
+    """
+    Class represent the entire structural analysis model.
+    """
 
     def __init__(self) -> None:
-        """Init the FrameXZModel object."""
-        super().__init__(analysis=FrameXZAnalysis())
+        """Init the DesignModelFrameXZ object."""
+        super().__init__(FrameXZAnalysis())
