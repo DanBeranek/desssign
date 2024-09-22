@@ -11,7 +11,7 @@ from desssign.wood.design_checks.design_check import (
 )
 from desssign.wood.design_checks.design_check import CombinedBendingAndAxialTensionCheck
 from desssign.wood.design_checks.design_check import ShearCheck
-from desssign.wood.enums import CheckResult
+from desssign.common.enums import CheckResult
 
 if TYPE_CHECKING:
     import numpy.typing as npt
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from desssign.wood.wood_member import WoodMember1D
 
 
-class Member1DChecks:
+class WoodMember1DChecks:
     """
     Class for performing design checks on 1D members.
 
@@ -28,7 +28,7 @@ class Member1DChecks:
     """
 
     def __init__(self, member: WoodMember1D) -> None:
-        """Init the Member1DChecks object."""
+        """Init the WoodMember1DChecks object."""
         self.member = member
 
         self.column_stability: dict[DesignLoadCaseCombination, ColumnStabilityCheck] = (

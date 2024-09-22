@@ -4,42 +4,10 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-from desssign.wood.enums import CheckResult
+from desssign.common.design_check import Check
 
 if TYPE_CHECKING:
     import numpy.typing as npt
-
-
-class Check:
-    """Abstract class for design checks."""
-
-    def __init__(
-        self,
-        code: str,
-        paragraph: str,
-        equation_number: str,
-    ) -> None:
-        """Init the Check object."""
-        self.code = code
-        self.paragraph = paragraph
-        self.equation_number = equation_number
-
-    @property
-    def usages(self) -> npt.NDArray[np.float64]:
-        """Usages of the material at every point along the member."""
-        raise NotImplementedError("Method 'usage' must be implemented.")
-
-    @property
-    def max_usage(self) -> float:
-        """Maximum usage of the material."""
-        return float(np.max(self.usages))
-
-    @property
-    def result(self) -> CheckResult:
-        """Overall design result."""
-        if self.max_usage <= 1.0:
-            return CheckResult(CheckResult.PASS)
-        return CheckResult(CheckResult.FAIL)
 
 
 class TensionParallelToTheGrainCheck(Check):
