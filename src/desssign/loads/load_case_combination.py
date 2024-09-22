@@ -14,7 +14,7 @@ from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
 from desssign.loads.load_case import DesignLoadCase
 from desssign.loads.load_combination_generator.generate_combinations import (
-generate_combination,
+    generate_combination,
 )
 
 
@@ -34,6 +34,7 @@ class DesignLoadCaseCombination(LoadCaseCombination):
     :param description: A description of the load case combination.
     :ivar combination_key: The key of the combination.
     """
+
     def __init__(
         self,
         label: str,

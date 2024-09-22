@@ -49,10 +49,8 @@ class Member1DChecks:
     """
     Abstract class for performing design checks on 1D members.
     """
-    def __init__(
-        self,
-        member: Member1D
-    ) -> None:
+
+    def __init__(self, member: Member1D) -> None:
         self.member = member
 
     @abstractmethod

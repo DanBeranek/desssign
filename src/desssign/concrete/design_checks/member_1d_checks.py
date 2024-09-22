@@ -21,12 +21,11 @@ class ConcreteMember1DChecks(Member1DChecks):
     :param member: The 1D concrete member.
     """
 
-    member: ConcreteMember1D  # Explicit type annotation, so that mypy can check the type
+    member: (
+        ConcreteMember1D  # Explicit type annotation, so that mypy can check the type
+    )
 
-    def __init__(
-        self,
-        member: ConcreteMember1D
-    ):
+    def __init__(self, member: ConcreteMember1D):
         super().__init__(member=member)
 
         self.bending_check: dict[DesignLoadCaseCombination, BendingCheck] = {}
@@ -34,12 +33,7 @@ class ConcreteMember1DChecks(Member1DChecks):
     @property
     def max_usage(self) -> float:
         """Maximum usage of the material."""
-        max_usages = [
-            check.max_usage
-            for check in (
-                *self.bending_check.values(),
-            )
-        ]
+        max_usages = [check.max_usage for check in (*self.bending_check.values(),)]
         return max(max_usages)
 
     def perform_uls_checks(
@@ -58,5 +52,5 @@ class ConcreteMember1DChecks(Member1DChecks):
             self.bending_check[combination] = BendingCheck(
                 m_ed=bending_y,
                 m_rd_positive=self.member.section.m_rd_positive,
-                m_rd_negative=self.member.section.m_rd_negative
+                m_rd_negative=self.member.section.m_rd_negative,
             )

@@ -34,8 +34,10 @@ class RebarMaterial(Material):
 
         if steel_grade is not None:
             if steel_grade not in STEEL_STRENGTH_CLASSES.keys():
-                raise ValueError(f"Steel grade '{steel_grade}' not recognised. "
-                                 f"Choose from: {[c for c in STEEL_STRENGTH_CLASSES.keys()]}.")
+                raise ValueError(
+                    f"Steel grade '{steel_grade}' not recognised. "
+                    f"Choose from: {[c for c in STEEL_STRENGTH_CLASSES.keys()]}."
+                )
             self.f_yk = STEEL_STRENGTH_CLASSES.get(steel_grade).get("f_yk")
             self.k = STEEL_STRENGTH_CLASSES.get(steel_grade).get("k")
             self.epsilon_uk = STEEL_STRENGTH_CLASSES.get(steel_grade).get("epsilon_uk")
@@ -78,10 +80,7 @@ class RebarMaterial(Material):
         f_yd = self.f_yd
         eps_sy = self.epsilon_syd
         k = self.k
-        f_yd2 = (
-            f_yd * (- k * eps_sy + eps_ud + eps_uk)
-            / (eps_sy - eps_uk)
-        )
+        f_yd2 = f_yd * (-k * eps_sy + eps_ud + eps_uk) / (eps_sy - eps_uk)
         return f_yd2
 
     @property

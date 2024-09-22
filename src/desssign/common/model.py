@@ -35,6 +35,7 @@ class DesignModel(Model):
 
     Upon :class:`framesss.fea.models.Model` class, it changes
     """
+
     load_combinations: set[DesignLoadCaseCombination]
     nonlinear_load_combinations: set[DesignNonlinearLoadCaseCombination]
     members: set[WoodMember1D | ConcreteMember1D]
@@ -156,10 +157,10 @@ class DesignModel(Model):
         other_variable_cases: list[DesignLoadCase],
         is_nonlinear: bool = False,
     ) -> (
-        DesignLoadCaseCombination |
-        DesignNonlinearLoadCaseCombination |
-        tuple[DesignLoadCaseCombination, DesignLoadCaseCombination] |
-        tuple[DesignNonlinearLoadCaseCombination, DesignNonlinearLoadCaseCombination]
+        DesignLoadCaseCombination
+        | DesignNonlinearLoadCaseCombination
+        | tuple[DesignLoadCaseCombination, DesignLoadCaseCombination]
+        | tuple[DesignNonlinearLoadCaseCombination, DesignNonlinearLoadCaseCombination]
     ):
         """
         Add and return new :class:`LoadCaseCombination` instance.
@@ -173,7 +174,11 @@ class DesignModel(Model):
         :param other_variable_cases: A list of other variable load cases.
         :param is_nonlinear: Flag if the combination is nonlinear.
         """
-        CombinationClass = DesignNonlinearLoadCaseCombination if is_nonlinear else DesignLoadCaseCombination
+        CombinationClass = (
+            DesignNonlinearLoadCaseCombination
+            if is_nonlinear
+            else DesignLoadCaseCombination
+        )
         if combination_type == ULSCombination.ALTERNATIVE:
             new_combination_a = CombinationClass(
                 label=f"{label}(a)",
@@ -221,9 +226,8 @@ class DesignModel(Model):
         """Perform ULS checks on the model members."""
         combinations = [
             comb
-            for comb in self.load_combinations.union(
-                self.nonlinear_load_combinations
-            ) if comb.limit_state == LimitState.ULS
+            for comb in self.load_combinations.union(self.nonlinear_load_combinations)
+            if comb.limit_state == LimitState.ULS
         ]
 
         for member in self.members:

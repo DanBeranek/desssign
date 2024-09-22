@@ -15,7 +15,7 @@ from numpy.testing import assert_almost_equal
 
 from desssign.loads.enums import LoadDurationClass
 from desssign.wood.enums import ServiceClass
-from desssign.wood.models import WoodModelFrameXZ
+from desssign.common.model import DesignModelFrameXZ
 from desssign.wood.wood_material import WoodMaterial
 from desssign.wood.wood_section import WoodRectangularSection
 
@@ -49,7 +49,7 @@ def test_example_IV_1() -> None:
     material = WoodMaterial("C24", ServiceClass.SC2)
     section = WoodRectangularSection("FOO", 0.1, 0.16, material)
 
-    model = WoodModelFrameXZ()
+    model = DesignModelFrameXZ()
 
     fixed = ["fixed", "free", "fixed", "free", "fixed", "free"]
     vertical_roller = ["fixed", "free", "free", "free", "free", "free"]
@@ -61,43 +61,53 @@ def test_example_IV_1() -> None:
     node_5 = model.add_node("5", [6, 0, 4])
     node_6 = model.add_node("6", [9, 0, 4], fixity=vertical_roller)
 
-    member_14 = model.add_member("1-4", "navier", [node_1, node_4], section)
-    member_45 = model.add_member(
+    member_14 = model.add_wood_member("1-4", "navier", [node_1, node_4], section)
+    member_45 = model.add_wood_member(
         "4-5", "navier", [node_4, node_5], section, hinges=["fixed", "hinged"]
     )
-    model.add_member(
+    model.add_wood_member(
         "2-5", "navier", [node_2, node_5], section, hinges=["fixed", "hinged"]
     )
-    member_56 = model.add_member(
+    member_56 = model.add_wood_member(
         "5-6", "navier", [node_5, node_6], section, hinges=["hinged", "fixed"]
     )
-    member_63 = model.add_member("6-3", "navier", [node_6, node_3], section)
+    member_63 = model.add_wood_member("6-3", "navier", [node_6, node_3], section)
 
-    lc1 = model.add_design_load_case("LC1", "variable", "a", "short-term")
+    lc1 = model.add_design_load_case(
+        label="LC1",
+        load_type="variable",
+        category="a",
+        load_duration_class="short-term",
+    )
     node_1.add_prescribed_displacement(-0.003, "x", lc1)
 
     lc2 = model.add_design_load_case(
-        "LC2", "permanent", load_duration_class="permanent"
+        label="LC2", load_type="permanent", load_duration_class="permanent"
     )
     node_3.add_prescribed_displacement(-0.003, "x", lc2)
 
-    lc3 = model.add_design_load_case("LC3", "variable", "wind", "instantaneous")
+    lc3 = model.add_design_load_case(
+        label="LC3",
+        load_type="variable",
+        category="wind",
+        load_duration_class="instantaneous",
+    )
     member_14.add_distributed_load(
         np.array([0, 0, 25, 0, 0, 25]) * 1e3, lc3, location="projection"
     )
 
     lc4 = model.add_design_load_case(
-        "LC4", "permanent", load_duration_class="permanent"
+        label="LC4", load_type="permanent", load_duration_class="permanent"
     )
     member_45.add_distributed_load(np.array([0, 0, 25, 0, 0, 25]) * 1e3, lc4)
 
     lc5 = model.add_design_load_case(
-        "LC5", "permanent", load_duration_class="permanent"
+        label="LC5", load_type="permanent", load_duration_class="permanent"
     )
     member_56.add_distributed_load(np.array([0, 0, -25, 0, 0, -25]) * 1e3, lc5)
 
     lc6 = model.add_design_load_case(
-        "LC6", "permanent", load_duration_class="permanent"
+        label="LC6", load_type="permanent", load_duration_class="permanent"
     )
     member_63.add_distributed_load(
         np.array([0, 0, -25, 0, 0, -25]) * 1e3, lc6, location="projection"

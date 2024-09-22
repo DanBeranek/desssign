@@ -24,7 +24,9 @@ class ConcreteSection(PolygonalSection):
     :param m_rd_negative: Bending moment resistance.
     """
 
-    material: ConcreteMaterial  # Explicit type annotation, so that mypy can check the type
+    material: (
+        ConcreteMaterial  # Explicit type annotation, so that mypy can check the type
+    )
 
     def __init__(
         self,
@@ -36,11 +38,7 @@ class ConcreteSection(PolygonalSection):
         m_rd_positive: float,
         m_rd_negative: float,
     ) -> None:
-        super().__init__(
-            label=label,
-            points=points,
-            material=material
-        )
+        super().__init__(label=label, points=points, material=material)
 
         self.b_w = b_w
         self.A_sl = A_sl

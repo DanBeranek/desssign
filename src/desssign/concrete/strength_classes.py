@@ -12,7 +12,7 @@ CONCRETE_STRENGTH_CLASSES = {
     "C60/75": 60e6,
     "C70/85": 70e6,
     "C80/95": 80e6,
-    "C90/105": 90e6
+    "C90/105": 90e6,
 }
 
 STEEL_STRENGTH_CLASSES = {
@@ -32,4 +32,3 @@ STEEL_STRENGTH_CLASSES = {
         "epsilon_uk": 0.075,
     },
 }
-

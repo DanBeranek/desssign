@@ -30,15 +30,21 @@ class ConcreteMaterial(Material):
 
         if strength_class is not None:
             if strength_class not in CONCRETE_STRENGTH_CLASSES.keys():
-                raise ValueError(f"Concrete strength class '{strength_class}' not recognised. "
-                                 f"Choose from: {[c for c in CONCRETE_STRENGTH_CLASSES.keys()]}.")
+                raise ValueError(
+                    f"Concrete strength class '{strength_class}' not recognised. "
+                    f"Choose from: {[c for c in CONCRETE_STRENGTH_CLASSES.keys()]}."
+                )
             self.f_ck = CONCRETE_STRENGTH_CLASSES.get(strength_class)
         else:
             if f_ck is None:
-                raise ValueError("Concrete strength class or characteristic "
-                                 "compressive cylinder strength must be provided.")
+                raise ValueError(
+                    "Concrete strength class or characteristic "
+                    "compressive cylinder strength must be provided."
+                )
             if f_ck <= 0:
-                raise ValueError("Characteristic compressive cylinder strength of concrete must be positive.")
+                raise ValueError(
+                    "Characteristic compressive cylinder strength of concrete must be positive."
+                )
             self.f_ck = f_ck
 
         self.gamma_c = gamma_c

@@ -8,7 +8,10 @@ from desssign.loads.enums import LoadType
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
-from desssign.loads.load_case_combination import DesignLoadCaseCombination, DesignNonlinearLoadCaseCombination
+from desssign.loads.load_case_combination import (
+    DesignLoadCaseCombination,
+    DesignNonlinearLoadCaseCombination,
+)
 from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
@@ -54,7 +57,7 @@ class CombinationsGenerator:
         self,
         *args: list[DesignLoadCaseGroup,],
         start_numbering_from: int = 1,
-        is_nonlinear: bool = False
+        is_nonlinear: bool = False,
     ) -> list[DesignLoadCaseCombination] | list[DesignNonlinearLoadCaseCombination]:
         """
         Generate all possible combinations of load cases.
@@ -89,7 +92,11 @@ class CombinationsGenerator:
 
         c = start_numbering_from
 
-        CombinationClass = DesignNonlinearLoadCaseCombination if is_nonlinear else DesignLoadCaseCombination
+        CombinationClass = (
+            DesignNonlinearLoadCaseCombination
+            if is_nonlinear
+            else DesignLoadCaseCombination
+        )
 
         for unique_combination in unique_combinations:
             permanent_cases = [

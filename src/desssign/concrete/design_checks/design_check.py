@@ -49,7 +49,7 @@ class ShearCheckWithoutShearReinforcement(Check):
         d: float,
         b_w: float,
         A_sl: float,
-        c_rd_c: float = 0.18/1.15,
+        c_rd_c: float = 0.18 / 1.15,
     ) -> None:
         """
         Init the ShearCheck object.

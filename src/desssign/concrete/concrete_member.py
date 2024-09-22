@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from framesss.fea.analysis.analysis import Analysis
     from framesss.fea.node import Node
 
-    from desssign.loads.load_case_combination import DesignLoadCaseCombination
+    from desssign.loads.load_case_combination import DesignLoadCaseCombination, DesignNonlinearLoadCaseCombination
     from desssign.concrete.concrete_section import ConcreteSection
 
 
@@ -36,7 +36,9 @@ class ConcreteMember1D(Member1D):
     :param analysis: The :class:`Analysis` object.
     """
 
-    section: ConcreteSection  # Explicit type annotation, so that mypy can check the type
+    section: (
+        ConcreteSection  # Explicit type annotation, so that mypy can check the type
+    )
 
     def __init__(
         self,
@@ -62,7 +64,7 @@ class ConcreteMember1D(Member1D):
         self.design_checks = ConcreteMember1DChecks(self)
 
     def perform_uls_checks(
-        self, load_combinations: list[DesignLoadCaseCombination]
+        self, load_combinations: list[DesignLoadCaseCombination | DesignNonlinearLoadCaseCombination]
     ) -> None:
         """Perform the design checks."""
         self.design_checks.perform_uls_checks(load_combinations)
