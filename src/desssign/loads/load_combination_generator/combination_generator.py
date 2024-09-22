@@ -8,7 +8,7 @@ from desssign.loads.enums import LoadType
 from desssign.loads.enums import SLSCombination
 from desssign.loads.enums import ULSAlternativeCombination
 from desssign.loads.enums import ULSCombination
-from desssign.loads.load_case_combination import DesignLoadCaseCombination
+from desssign.loads.load_case_combination import DesignLoadCaseCombination, DesignNonlinearLoadCaseCombination
 from desssign.utils import flatten_list
 
 if TYPE_CHECKING:
@@ -54,12 +54,14 @@ class CombinationsGenerator:
         self,
         *args: list[DesignLoadCaseGroup,],
         start_numbering_from: int = 1,
-    ) -> list[DesignLoadCaseCombination]:
+        is_nonlinear: bool = False
+    ) -> list[DesignLoadCaseCombination] | list[DesignNonlinearLoadCaseCombination]:
         """
         Generate all possible combinations of load cases.
 
         :param start_numbering_from: The number to start the combination numbering from.
         :param args: Variable length argument list of LoadCaseGroup lists.
+        :param is_nonlinear: Flag to indicate if the combination is for nonlinear analysis.
         return:A list of all generated combinations of load cases.
         """
         generated_combinations = []
@@ -86,6 +88,9 @@ class CombinationsGenerator:
         description = f"{self.limit_state.value.upper()}-{self.combination_type.value}"
 
         c = start_numbering_from
+
+        CombinationClass = DesignNonlinearLoadCaseCombination if is_nonlinear else DesignLoadCaseCombination
+
         for unique_combination in unique_combinations:
             permanent_cases = [
                 case
@@ -105,7 +110,7 @@ class CombinationsGenerator:
 
                     if self.combination_type == ULSCombination.ALTERNATIVE:
                         generated_combinations.append(
-                            DesignLoadCaseCombination(
+                            CombinationClass(
                                 label=f"{label}{c}a",
                                 description=description,
                                 limit_state=self.limit_state,
@@ -117,7 +122,7 @@ class CombinationsGenerator:
                             )
                         )
                         generated_combinations.append(
-                            DesignLoadCaseCombination(
+                            CombinationClass(
                                 label=f"{label}{c}b",
                                 description=description,
                                 limit_state=self.limit_state,
@@ -130,7 +135,7 @@ class CombinationsGenerator:
                         )
                     else:
                         generated_combinations.append(
-                            DesignLoadCaseCombination(
+                            CombinationClass(
                                 label=f"{label}{c}",
                                 description=description,
                                 limit_state=self.limit_state,
@@ -145,7 +150,7 @@ class CombinationsGenerator:
             else:  # in case there are only permanent cases
                 if self.combination_type == ULSCombination.ALTERNATIVE:
                     generated_combinations.append(
-                        DesignLoadCaseCombination(
+                        CombinationClass(
                             label=f"{label}{c}a",
                             description=description,
                             limit_state=self.limit_state,
@@ -157,7 +162,7 @@ class CombinationsGenerator:
                         )
                     )
                     generated_combinations.append(
-                        DesignLoadCaseCombination(
+                        CombinationClass(
                             label=f"{label}{c}b",
                             description=description,
                             limit_state=self.limit_state,
@@ -170,7 +175,7 @@ class CombinationsGenerator:
                     )
                 else:
                     generated_combinations.append(
-                        DesignLoadCaseCombination(
+                        CombinationClass(
                             label=f"{label}{c}",
                             description=description,
                             limit_state=self.limit_state,
