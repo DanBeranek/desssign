@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 from framesss.pre.member_1d import Member1D
 
-from desssign.wood.design_checks.member_1d_checks import Member1DChecks
+from desssign.wood.design_checks.member_1d_checks import WoodMember1DChecks
 
 if TYPE_CHECKING:
     import numpy as np
@@ -59,7 +59,7 @@ class WoodMember1D(Member1D):
             analysis=analysis,
         )
 
-        self.design_checks = Member1DChecks(self)
+        self.design_checks = WoodMember1DChecks(self)
 
         self.is_prevented_lateral_displacement_at_compressive_edge = False
         self.is_prevented_torsional_rotation_at_supports = False

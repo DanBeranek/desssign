@@ -46,15 +46,3 @@ class ServiceClass(IntEnum):
     SC1 = 1
     SC2 = 2
     SC3 = 3
-
-
-class CheckResult(CaseInsensitiveStrEnum):
-    """
-    Enum for design results.
-
-    :cvar PASS: Design check passed.
-    :cvar FAIL: Design check failed.
-    """
-
-    PASS = "pass"
-    FAIL = "fail"
