@@ -92,9 +92,9 @@ class ConcreteMaterial(Material):
     def f_ctm(self) -> float:
         """Mean value of axial tensile strength of concrete [Pa]."""
         if self.f_ck <= 50e6:
-            f_ctm = 0.3 * self.f_ck ** (2 / 3)
+            f_ctm = (0.3 * (self.f_ck / 1e6) ** (2 / 3)) * 1e6
         else:
-            f_ctm = 2.12 * math.log(1 + (self.f_cm / 1e6) / 10)
+            f_ctm = (2.12 * math.log(1 + (self.f_cm / 1e6) / 10)) * 1e6
         return f_ctm
 
     @property
