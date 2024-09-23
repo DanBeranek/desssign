@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import numpy as np
+
 from framesss.pre.material import Material
 
 from desssign.concrete.strength_classes import STEEL_STRENGTH_CLASSES
@@ -80,7 +82,11 @@ class RebarMaterial(Material):
         f_yd = self.f_yd
         eps_sy = self.epsilon_syd
         k = self.k
-        f_yd2 = f_yd * (-k * eps_sy + eps_ud + eps_uk) / (eps_sy - eps_uk)
+        f_yd2 = np.interp(
+            x=eps_ud,
+            xp=[eps_sy, eps_uk],
+            fp=[f_yd, k * f_yd],
+        )
         return f_yd2
 
     @property

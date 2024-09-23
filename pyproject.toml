@@ -19,6 +19,7 @@ click = ">=8.0.1"
 numpy = "^1.26.4"
 aenum = "^3.1.15"
 framesss = ">=0.0.8, <1.0.1"
+matplotlib = "^3.9.2"
 
 [tool.poetry.group.dev.dependencies]
 pygments = ">=2.10.0"
