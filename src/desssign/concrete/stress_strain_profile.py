@@ -165,7 +165,8 @@ class ConcreteStressStrainProfile(StressStrainProfile):
     :param tension_profile: Type of the tension stress-strain profile.
     :param tension_softening_stiffness: Slope of the linear tension softening branch (Pa).
     :param n_points_1: Number of points to discretize the curve prior to the peak stress
-    :param n_points_2: Number of points to discretize the curve after the peak stress
+    :param n_points_2: Number of points to discretize the curve after the peak stress.
+    :param effective_creep_ratio: Effective creep ratio for the concrete.
     """
     def __init__(
         self,
@@ -176,6 +177,7 @@ class ConcreteStressStrainProfile(StressStrainProfile):
         tension_softening_stiffness: float = 10.0e9,
         n_points_1: int = 10,
         n_points_2: int = 5,
+        effective_creep_ratio: float = 0.0,
     ) -> None:
         self.concrete = concrete
 
@@ -194,18 +196,24 @@ class ConcreteStressStrainProfile(StressStrainProfile):
             if compression_profile == ConcreteCompressionSSP.STRESS_BLOCK:
                 raise ValueError("Stress block compression profile is not allowed for SLS.")
 
+        if effective_creep_ratio < 0:
+            raise ValueError("Effective creep ratio must be non-negative.")
+
         self.limit_state = limit_state
         self.compression_profile = compression_profile
         self.tension_profile = tension_profile
         self.tension_softening_stiffness = tension_softening_stiffness
         self._n_points_1 = n_points_1
         self._n_points_2 = n_points_2
+        self.effective_creep_ratio = effective_creep_ratio
 
         tension_strain, tension_stress = self._get_tension_strain_stress_values()
         compression_strain, compression_stress = self._get_compression_strain_stress_values()
 
+        strains = np.concatenate((compression_strain, tension_strain)) * (1 + self.effective_creep_ratio)
+
         super().__init__(
-            strains=compression_strain+tension_strain,
+            strains=strains,
             stresses=compression_stress+tension_stress,
         )
 
@@ -414,7 +422,7 @@ def main() -> None:
     for c_profile in ConcreteCompressionSSP:
         for t_profile in ConcreteTensionSSP:
             try:
-                ssp = ConcreteStressStrainProfile(concrete=conc, compression_profile=c_profile, tension_profile=t_profile, limit_state="sls")
+                ssp = ConcreteStressStrainProfile(concrete=conc, compression_profile=c_profile, tension_profile=t_profile, limit_state="sls", effective_creep_ration=0)
                 ssp.plot_profile(title=f"{c_profile.value} - {t_profile.value}")
             except ValueError as e:
                 pass
