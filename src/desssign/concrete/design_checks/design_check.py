@@ -23,8 +23,8 @@ class BendingCheck(Check):
     def __init__(
         self,
         m_ed: npt.NDArray[np.float64],
-        m_rd_positive: float,
-        m_rd_negative: float,
+        m_rd_positive: float | npt.NDArray[np.float64],
+        m_rd_negative: float | npt.NDArray[np.float64],
     ) -> None:
         """Init the BendingCheck object."""
         super().__init__("EN 1992-1-1", "", "6.1")
@@ -34,11 +34,38 @@ class BendingCheck(Check):
 
     @property
     def usages(self) -> npt.NDArray[np.float64]:
-        """Usages of the material at every point along the member."""
+        """Usages of the section at every point along the member."""
         usages = np.zeros(self.m_ed.shape)
-        usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive
-        usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative
+        if isinstance(self.m_rd_positive, float):
+            usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive
+            usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative
+        elif isinstance(self.m_rd_negative, np.ndarray):
+            usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive[self.m_ed >= 0]
+            usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative[self.m_ed < 0]
         return usages
+
+
+class ShearCheck(Check):
+    """
+    Class for checking shear force.
+
+    :param v_ed: Shear force along the member
+    :param v_rd: Ultimate shear resistance
+    """
+
+    def __init__(
+        self,
+        v_ed: npt.NDArray[np.float64],
+        v_rd: npt.NDArray[np.float64]
+    ) -> None:
+        super().__init__("EN 1992-1-1", "", "")
+        self.v_ed = v_ed
+        self.v_rd = v_rd
+
+    @property
+    def usages(self) -> npt.NDArray[np.float64]:
+        """Usages of the section at every point along the member"""
+        return np.abs(self.v_ed / self.v_rd)
 
 
 class ShearCheckWithoutShearReinforcement(Check):
