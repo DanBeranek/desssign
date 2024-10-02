@@ -65,7 +65,11 @@ class Member1DChecks:
             return CheckResult(CheckResult.PASS)
         return CheckResult(CheckResult.FAIL)
 
-    def get_internal_forces(self, combination: DesignLoadCaseCombination) -> tuple[
+    def get_internal_forces(
+        self,
+        combination: DesignLoadCaseCombination,
+        include_peaks: bool = True,
+    ) -> tuple[
         npt.NDArray[np.float64],
         npt.NDArray[np.float64],
         npt.NDArray[np.float64],
@@ -76,48 +80,54 @@ class Member1DChecks:
         """Get the internal forces for a given load case combination."""
         # Determine the default array sizes from the member dimensions
         default_length = self.member.x_local.shape[0]
-        default_peak_length = self.member.results.peak_x_local.get(
-            combination, np.zeros(0)
-        ).shape[0]
 
         # Safe retrieval of internal forces using the .get method with default zero arrays
         axial = self.member.results.axial_forces.get(
             combination, np.zeros(default_length)
         )
-        axial_peaks = self.member.results.peak_axial_forces.get(
-            combination, np.zeros(default_peak_length)
-        )
-
         shear_y = self.member.results.shear_forces_y.get(
             combination, np.zeros(default_length)
+        )
+        shear_z = self.member.results.shear_forces_z.get(
+            combination, np.zeros(default_length)
+        )
+        torsion = self.member.results.torsional_moments.get(
+            combination, np.zeros(default_length)
+        )
+        bending_y = self.member.results.bending_moments_y.get(
+            combination, np.zeros(default_length)
+        )
+        bending_z = self.member.results.bending_moments_z.get(
+            combination, np.zeros(default_length)
+        )
+
+        if not include_peaks:
+            return (
+                axial,
+                shear_y,
+                shear_z,
+                torsion,
+                bending_y,
+                bending_z,
+            )
+
+        default_peak_length = self.member.results.peak_x_local.get(
+            combination, np.zeros(0)
+        ).shape[0]
+        axial_peaks = self.member.results.peak_axial_forces.get(
+            combination, np.zeros(default_peak_length)
         )
         shear_y_peaks = self.member.results.peak_shear_forces_y.get(
             combination, np.zeros(default_peak_length)
         )
-
-        shear_z = self.member.results.shear_forces_z.get(
-            combination, np.zeros(default_length)
-        )
         shear_z_peaks = self.member.results.peak_shear_forces_z.get(
             combination, np.zeros(default_peak_length)
-        )
-
-        torsion = self.member.results.torsional_moments.get(
-            combination, np.zeros(default_length)
         )
         torsion_peaks = self.member.results.peak_torsional_moments.get(
             combination, np.zeros(default_peak_length)
         )
-
-        bending_y = self.member.results.bending_moments_y.get(
-            combination, np.zeros(default_length)
-        )
         bending_y_peaks = self.member.results.peak_bending_moments_y.get(
             combination, np.zeros(default_peak_length)
-        )
-
-        bending_z = self.member.results.bending_moments_z.get(
-            combination, np.zeros(default_length)
         )
         bending_z_peaks = self.member.results.peak_bending_moments_z.get(
             combination, np.zeros(default_peak_length)
