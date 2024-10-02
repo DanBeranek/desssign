@@ -38,7 +38,13 @@ class ConcreteMember1DChecks(Member1DChecks):
     @property
     def max_usage(self) -> float:
         """Maximum usage of the material."""
-        max_usages = [check.max_usage for check in (*self.bending_check.values(),)]
+        max_usages = [check.max_usage for check in (*self.shear_check.values(),)]
+
+        for value in self.bending_check.values():
+            if isinstance(value, list):
+                max_usages.extend([check.max_usage for check in value])
+            else:
+                max_usages.append(value.max_usage)
         return max(max_usages)
 
     def perform_uls_checks(
@@ -250,5 +256,7 @@ if __name__ == "__main__":
     solver.solve()
 
     model.perform_uls_checks(envelope=env)
+
+    print(member_12.design_checks.max_usage)
 
     print("")
