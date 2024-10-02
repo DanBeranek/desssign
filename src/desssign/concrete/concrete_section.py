@@ -18,8 +18,7 @@ class ConcreteSection(PolygonalSection):
     :param label: Label of the section.
     :param points: Points defining boundary of the section.
     :param material: Material of the section.
-    :param b_w: Smallest width of the cross-section in the tensile area.
-    :param A_sl: Area of the tensile reinforcement.
+    :param v_rd: Shear force resistance
     :param m_rd_positive: Bending moment resistance.
     :param m_rd_negative: Bending moment resistance.
     """
@@ -33,14 +32,12 @@ class ConcreteSection(PolygonalSection):
         label: str,
         points: list[list[float]],
         material: ConcreteMaterial,
-        b_w: float,
-        A_sl: float,
+        v_rd: float,
         m_rd_positive: float,
         m_rd_negative: float,
     ) -> None:
         super().__init__(label=label, points=points, material=material)
 
-        self.b_w = b_w
-        self.A_sl = A_sl
+        self.v_rd = v_rd
         self.m_rd_positive = m_rd_positive
         self.m_rd_negative = m_rd_negative

@@ -7,6 +7,7 @@ from framesss.enums import Element1DType
 from framesss.fea.analysis.analysis import Analysis
 from framesss.fea.analysis.frame_xz_analysis import FrameXZAnalysis
 from framesss.fea.models.model import Model
+from framesss.pre.cases import EnvelopeCombination
 
 from desssign.loads.enums import LimitState
 from desssign.loads.enums import LoadDurationClass
@@ -222,13 +223,16 @@ class DesignModel(Model):
             self.load_combinations.add(new_combination)
         return new_combination
 
-    def perform_uls_checks(self) -> None:
+    def perform_uls_checks(self, envelope: EnvelopeCombination | None = None) -> None:
         """Perform ULS checks on the model members."""
-        combinations = [
-            comb
-            for comb in self.load_combinations.union(self.nonlinear_load_combinations)
-            if comb.limit_state == LimitState.ULS
-        ]
+        if envelope:
+            combinations = envelope
+        else:
+            combinations = [
+                comb
+                for comb in self.load_combinations.union(self.nonlinear_load_combinations)
+                if comb.limit_state == LimitState.ULS
+            ]
 
         for member in self.members:
             member.perform_uls_checks(combinations)
