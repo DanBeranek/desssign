@@ -40,8 +40,8 @@ class BendingCheck(Check):
             usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive
             usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative
         elif isinstance(self.m_rd_negative, np.ndarray):
-            usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive[self.m_ed >= 0]
-            usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative[self.m_ed < 0]
+            usages[1][self.m_ed[1] >= 0] = self.m_ed[1][self.m_ed[1] >= 0] / self.m_rd_positive[self.m_ed[1] >= 0]
+            usages[0][self.m_ed[0] < 0] = self.m_ed[0][self.m_ed[0] < 0] / self.m_rd_negative[self.m_ed[0] < 0]
         return usages
 
 
