@@ -40,8 +40,14 @@ class BendingCheck(Check):
             usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive
             usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative
         elif isinstance(self.m_rd_negative, np.ndarray):
-            usages[1][self.m_ed[1] >= 0] = self.m_ed[1][self.m_ed[1] >= 0] / self.m_rd_positive[self.m_ed[1] >= 0]
-            usages[0][self.m_ed[0] < 0] = self.m_ed[0][self.m_ed[0] < 0] / self.m_rd_negative[self.m_ed[0] < 0]
+            if self.m_ed.ndim == 1:
+                usages[self.m_ed >= 0] = self.m_ed[self.m_ed >= 0] / self.m_rd_positive[self.m_ed >= 0]
+                usages[self.m_ed < 0] = self.m_ed[self.m_ed < 0] / self.m_rd_negative[self.m_ed < 0]
+            elif self.m_ed.ndim == 2:
+                usages[1][self.m_ed[1] >= 0] = self.m_ed[1][self.m_ed[1] >= 0] / self.m_rd_positive[self.m_ed[1] >= 0]
+                usages[0][self.m_ed[0] < 0] = self.m_ed[0][self.m_ed[0] < 0] / self.m_rd_negative[self.m_ed[0] < 0]
+            else:
+                raise ValueError(f"m_ed should have 1 or 2 dimensions, not {self.m_ed.ndim}")
         return usages
 
 
