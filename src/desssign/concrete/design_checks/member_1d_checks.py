@@ -245,6 +245,7 @@ if __name__ == "__main__":
     solver.solve()
 
     model.perform_uls_checks(envelope=env)
+    model.perform_uls_checks()
 
     print(member_12.design_checks.max_usage)
 
