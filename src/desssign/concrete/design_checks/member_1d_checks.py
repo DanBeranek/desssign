@@ -31,7 +31,7 @@ class ConcreteMember1DChecks(Member1DChecks):
         super().__init__(member=member)
 
         self.bending_check: (dict[DesignLoadCaseCombination, BendingCheck] |
-                             dict[EnvelopeCombination, list[BendingCheck, BendingCheck]]) = {}
+                             dict[EnvelopeCombination, BendingCheck]) = {}
         self.shear_check: (dict[DesignLoadCaseCombination, ShearCheck] |
                            dict[EnvelopeCombination, ShearCheck]) = {}
 
@@ -130,34 +130,23 @@ class ConcreteMember1DChecks(Member1DChecks):
     def perform_shear_checks_envelope(self, envelope: EnvelopeCombination) -> None:
         pos_neg_shear_z = self.member.results.shear_forces_z.get(envelope)
 
-        shear_z = np.max(pos_neg_shear_z, axis=0)
         v_rd = self.get_shear_force_resistance()
 
         self.shear_check[envelope] = ShearCheck(
-            v_ed=shear_z,
+            v_ed=pos_neg_shear_z,
             v_rd=v_rd
         )
 
     def perform_bending_checks_envelope(self, envelope: EnvelopeCombination) -> None:
-        pos_bending_y, neg_bending_y = self.member.results.bending_moments_y.get(envelope)
+        pos_neg_bending_y = self.member.results.bending_moments_y.get(envelope)
 
         m_rd_positive, m_rd_negative = self.get_moments_of_resistance()
 
-        self.bending_check[envelope] = (
-            [
-                BendingCheck(
-                    m_ed=pos_bending_y,
-                    m_rd_positive=m_rd_positive,
-                    m_rd_negative=m_rd_negative,
-                ),
-                BendingCheck(
-                    m_ed=neg_bending_y,
-                    m_rd_positive=m_rd_positive,
-                    m_rd_negative=m_rd_negative,
-                )
-            ]
+        self.bending_check[envelope] = BendingCheck(
+            m_ed=pos_neg_bending_y,
+            m_rd_positive=m_rd_positive,
+            m_rd_negative=m_rd_negative,
         )
-
 
 
 if __name__ == "__main__":
